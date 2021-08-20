@@ -1,13 +1,6 @@
 class AnswersController < ApplicationController
-  before_action :set_answer, only: %i[show edit update destroy]
+  before_action :set_answer, only: %i[edit update destroy]
   before_action :set_question, only: %i[new create]
-
-  def index
-    @answers = Answer.all
-  end
-
-  def show
-  end
 
   def new
     @answer = @question.answers.new

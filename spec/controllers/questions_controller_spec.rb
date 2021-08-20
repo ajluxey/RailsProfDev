@@ -3,6 +3,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 3) }
+
     before { get :index }
 
     it 'populate an array of all questions' do
@@ -52,37 +53,43 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'POST #create' do
     context 'with valid params' do
+      let(:post_create_request) { post :create, params: { question: attributes_for(:question) } }
+
       it 'saves a new question in the database' do
-        expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+        expect { post_create_request }.to change(Question, :count).by(1)
       end
 
       it 'redirect to show' do
-        post :create, params: { question: attributes_for(:question) }
+        post_create_request
         expect(response).to redirect_to assigns(:question)
       end
     end
 
     context 'with invalid params' do
+      let(:post_create_invalid_request) { post :create, params: { question: attributes_for(:question, :invalid) } }
+
       it 'does not save the question' do
-        expect { post :create, params: { question: attributes_for(:question, :invalid) } }.to_not change(Question, :count)
+        expect { post_create_invalid_request }.to_not change(Question, :count)
       end
 
       it 're-renders new' do
-        post :create, params: { question: attributes_for(:question, :invalid) }
+        post_create_invalid_request
         expect(response).to render_template :new
       end
     end
   end
 
   describe 'PATCH #update' do
+    before do |test|
+      patch :update, params: { id: question, question: { title: '123', body: '124' } } unless test.metadata[:invalid]
+    end
+
     it 'assigns requested question to @question' do
-      patch :update, params: { id: question, question: attributes_for(:question) }
       expect(assigns(:question)).to eq question
     end
 
     context 'with valid params' do
       it 'updates requested question' do
-        patch :update, params: { id: question, question: { title: '123', body: '124' } }
         question.reload
 
         expect(question.title).to eq '123'
@@ -90,12 +97,11 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'redirect to show' do
-        patch :update, params: { id: question, question: attributes_for(:question) }
         expect(response).to redirect_to question
       end
     end
 
-    context 'with invalid params' do
+    context 'with invalid params', :invalid do
       before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) } }
 
       it 'does not update requested question' do
@@ -112,19 +118,20 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #delete' do
+    let(:post_delete_request) { delete :destroy, params: { id: question } }
     let!(:question) { create(:question) }
 
     it 'assigns requested question to @question' do
-      delete :destroy, params: { id: question }
+      post_delete_request
       expect(assigns(:question)).to eq question
     end
 
     it 'destroy requested question' do
-      expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
+      expect { post_delete_request }.to change(Question, :count).by(-1)
     end
 
     it 'redirect to index' do
-      delete :destroy, params: { id: question }
+      post_delete_request
       expect(response).to redirect_to questions_path
     end
   end
