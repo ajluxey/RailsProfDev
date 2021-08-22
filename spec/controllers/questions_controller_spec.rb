@@ -52,8 +52,10 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
+    let(:post_create_request) { post :create, params: { question: question_params } }
+
     context 'with valid params' do
-      let(:post_create_request) { post :create, params: { question: attributes_for(:question) } }
+      let(:question_params) { attributes_for(:question) }
 
       it 'saves a new question in the database' do
         expect { post_create_request }.to change(Question, :count).by(1)
@@ -66,23 +68,23 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with invalid params' do
-      let(:post_create_invalid_request) { post :create, params: { question: attributes_for(:question, :invalid) } }
+      let(:question_params) { attributes_for(:question, :invalid) }
 
       it 'does not save the question' do
-        expect { post_create_invalid_request }.to_not change(Question, :count)
+        expect { post_create_request }.not_to change(Question, :count)
       end
 
       it 're-renders new' do
-        post_create_invalid_request
+        post_create_request
         expect(response).to render_template :new
       end
     end
   end
 
   describe 'PATCH #update' do
-    before do |test|
-      patch :update, params: { id: question, question: { title: '123', body: '124' } } unless test.metadata[:invalid]
-    end
+    let(:question_params) { attributes_for(:question, :updated) }
+
+    before { patch :update, params: { id: question, question: question_params } }
 
     it 'assigns requested question to @question' do
       expect(assigns(:question)).to eq question
@@ -92,8 +94,7 @@ RSpec.describe QuestionsController, type: :controller do
       it 'updates requested question' do
         question.reload
 
-        expect(question.title).to eq '123'
-        expect(question.body).to eq '124'
+        expect(question).to have_attributes(question_params)
       end
 
       it 'redirect to show' do
@@ -101,14 +102,13 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
-    context 'with invalid params', :invalid do
-      before { patch :update, params: { id: question, question: attributes_for(:question, :invalid) } }
+    context 'with invalid params' do
+      let(:question_params) { attributes_for(:question, :invalid) }
 
       it 'does not update requested question' do
         question.reload
 
-        expect(question.title).to eq "MyString"
-        expect(question.body).to eq "MyText"
+        expect(question).to have_attributes(attributes_for(:question))
       end
 
       it 'rerender edit' do

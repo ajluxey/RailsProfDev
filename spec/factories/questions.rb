@@ -3,6 +3,11 @@ FactoryBot.define do
     title { "MyString" }
     body { "MyText" }
 
+    trait :updated do
+      title { "MyNewString" }
+      body { "MyNewText" }
+    end
+
     trait :invalid do
       title { nil }
     end

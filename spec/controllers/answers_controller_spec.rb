@@ -31,11 +31,13 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'POST #create' do
-    let(:post_create_request) { post :create, params: { answer: attributes_for(:answer), question_id: question } }
+    let(:post_create_request) { post :create, params: { answer: answer_params, question_id: question } }
 
     context 'with valid params' do
+      let(:answer_params) { attributes_for(:answer) }
+
       it 'saves a new answer for question in the database' do
-        expect { post_create_request }.to change(Answer, :count).by(1).and change(question.answers, :count).by(1)
+        expect { post_create_request }.to change(question.answers, :count).by(1)
       end
 
       it 'redirect to show' do
@@ -45,23 +47,23 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'with invalid params' do
-      let(:post_create_invalid_request) { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question } }
+      let(:answer_params) { attributes_for(:answer, :invalid) }
 
       it 'does not save answer' do
-        expect { post_create_invalid_request }.to_not change(Answer, :count)
+        expect { post_create_request }.not_to change(Answer, :count)
       end
 
       it 're-renders new' do
-        post_create_invalid_request
+        post_create_request
         expect(response).to render_template :new
       end
     end
   end
 
   describe 'PATCH #update' do
-    before do |test|
-      patch :update, params: { id: answer, answer: { body: 'aboba', correct: true } } unless test.metadata[:invalid]
-    end
+    let(:answer_params) { attributes_for(:answer, :updated) }
+
+    before { patch :update, params: { id: answer, answer: answer_params } }
 
     it 'assigns updated answer to @answer' do
       expect(assigns(:answer)).to eq answer
@@ -71,8 +73,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'updates requested question' do
         answer.reload
 
-        expect(answer.body).to eq 'aboba'
-        expect(answer.correct).to eq true
+        expect(answer).to have_attributes(answer_params)
       end
 
       it 'redirect to show' do
@@ -80,14 +81,13 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
 
-    context 'with invalid params', :invalid do
-      before { patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) } }
+    context 'with invalid params' do
+      let(:answer_params) { attributes_for(:answer, :invalid) }
 
       it 'does not update requested question' do
         answer.reload
 
-        expect(answer.body).to eq "MyText"
-        expect(answer.correct).to be_falsey
+        expect(answer).to have_attributes(attributes_for(:answer))
       end
 
       it 're-renders edit' do
@@ -98,20 +98,19 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #delete' do
     let!(:answer) { create(:answer, question: question) }
-
-    before do |test|
-      post :destroy, params: { id: answer } unless test.metadata[:deleting]
-    end
+    let(:post_delete_request) { post :destroy, params: { id: answer } }
 
     it 'assigns requested answer to @answer' do
+      post_delete_request
       expect(assigns(:answer)).to eq answer
     end
 
-    it 'destroy requested answer', :deleting do
-      expect { post :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+    it 'destroy requested answer' do
+      expect { post_delete_request }.to change(Answer, :count).by(-1)
     end
 
     it 'redirect to index' do
+      post_delete_request
       expect(response).to redirect_to question_answers_path(question)
     end
   end

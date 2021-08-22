@@ -4,6 +4,11 @@ FactoryBot.define do
     correct { false }
     question
 
+    trait :updated do
+      body { "MyNewText" }
+      correct { true }
+    end
+
     trait :invalid do
       body { nil }
     end
