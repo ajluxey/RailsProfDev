@@ -32,7 +32,7 @@ RSpec.describe AnswersController, type: :controller do
       it 're-renders form' do
         post_create_request
 
-        expect(response).to render_template "question/show"
+        expect(response).to render_template "questions/show"
       end
     end
   end
