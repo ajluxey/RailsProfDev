@@ -1,0 +1,11 @@
+p= link_to 'Create new question', new_question_path
+
+table
+  thead
+    th 'Title'
+    th 'Body'
+    th 'Author'
+    th[collspan="1"] 'Actions'
+
+  tbody
+    = render @questions
