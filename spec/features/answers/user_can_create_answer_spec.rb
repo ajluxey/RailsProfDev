@@ -20,7 +20,6 @@ feature 'User can create answer', %q(
       visit question_path(question)
     end
 
-
     scenario 'creates an answer' do
       fill_in 'Body', with: 'Answer title'
       click_on 'Create new answer'
