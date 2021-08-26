@@ -13,7 +13,6 @@ feature 'User can create answer', %q(
 
   describe 'Authenticated user' do
     given(:user) { create(:user) }
-    given!(:question) { create(:question, author: user) }
 
     background do
       login_as(user)
@@ -25,6 +24,7 @@ feature 'User can create answer', %q(
       click_on 'Create new answer'
 
       expect(page).to have_content 'Your answer successfully created.'
+      expect(page).to have_content 'Answer title'
     end
 
     scenario 'creates an answer with errors' do

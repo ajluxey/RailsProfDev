@@ -1,5 +1,8 @@
-tr
-  td= answer.author
-  td= answer.body
-  td= answer.correct
+- if !answer.new_record?
+  tr
+    td= answer.author
+    td= answer.body
+    td= answer.correct
+    - if current_user && current_user.author?(answer)
+      td= link_to('Delete answer', answer_path(answer), method: :delete)
 

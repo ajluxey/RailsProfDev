@@ -1,4 +1,7 @@
 class AnswersController < ApplicationController
+  before_action :set_answer, only: :destroy
+  before_action :required_author!, only: :destroy
+
   def create
     @question = Question.find(params[:question_id])
 
@@ -13,14 +16,21 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @answer = Answer.find(params[:id])
     @answer.destroy
-    redirect_to question_path(@answer.question)
+    redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted.'
   end
 
   private
 
+  def set_answer
+    @answer = Answer.find(params[:id])
+  end
+
   def answer_params
     params.require(:answer).permit(:body, :correct)
+  end
+
+  def required_author!
+    redirect_to question_path(@answer.question), alert: 'You must be author' unless current_user.author?(@answer)
   end
 end

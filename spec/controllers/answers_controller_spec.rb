@@ -61,7 +61,11 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'when user is not author' do
-      let(:answer) { create(:answer, question: question) }
+      let!(:answer) { create(:answer, question: question) }
+
+      it 'does not destroy requested answer' do
+        expect { post_delete_request }.not_to change(Answer, :count)
+      end
 
       it 'redirect to question show' do
         post :destroy, params: { id: answer }
