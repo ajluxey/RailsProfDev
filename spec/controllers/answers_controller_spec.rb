@@ -32,7 +32,7 @@ RSpec.describe AnswersController, type: :controller do
       it 're-renders form' do
         post_create_request
 
-        expect(response).to render_template "questions/show"
+        expect(response).to render_template 'questions/show'
       end
     end
   end
@@ -40,7 +40,7 @@ RSpec.describe AnswersController, type: :controller do
   describe 'POST #delete' do
     let(:post_delete_request) { post :destroy, params: { id: answer } }
 
-    context 'when user is author' do
+    context 'request from author' do
       let!(:answer) { create(:answer, author: user, question: question) }
 
       it 'assigns requested answer to @answer' do
@@ -60,7 +60,7 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
 
-    context 'when user is not author' do
+    context 'request from not author' do
       let!(:answer) { create(:answer, question: question) }
 
       it 'does not destroy requested answer' do

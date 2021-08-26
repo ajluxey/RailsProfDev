@@ -3,7 +3,6 @@ feature 'User can delete answer', %q(
   As an author of question
   I'd like to be able to delete the answer
 ) do
-
   given!(:question) { create(:question) }
 
   scenario 'Unauthenticated user tries to delete question' do
@@ -36,4 +35,3 @@ feature 'User can delete answer', %q(
     end
   end
 end
-

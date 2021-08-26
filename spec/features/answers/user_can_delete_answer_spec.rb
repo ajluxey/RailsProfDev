@@ -3,9 +3,7 @@ feature 'User can delete answer', %q(
   As an author of question
   I'd like to be able to delete the answer
 ) do
-
   given!(:answer) { create(:answer) }
-
 
   scenario 'Unauthenticated user tries to delete question' do
     visit question_path(answer.question)

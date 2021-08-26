@@ -46,10 +46,9 @@ RSpec.describe QuestionsController, type: :controller do
 
     describe 'POST #create' do
       let(:post_create_request) { post :create, params: { question: question_params } }
-      let(:user) { create(:user) }
+      let(:user)                { create(:user)                                       }
 
       before { login(user) }
-
 
       context 'with valid params' do
         let(:question_params) { attributes_for(:question) }
@@ -83,7 +82,7 @@ RSpec.describe QuestionsController, type: :controller do
     describe 'GET #edit' do
       before { get :edit, params: { id: question } }
 
-      context 'user is author' do
+      context 'request from author' do
         let(:question) { create(:question, author: user) }
 
         it 'assigns requested question to @question' do
@@ -95,7 +94,7 @@ RSpec.describe QuestionsController, type: :controller do
         end
       end
 
-      context 'user is not author' do
+      context 'request from not author' do
         it { expect(response).to redirect_to question_path(question) }
       end
     end
@@ -105,7 +104,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       before { patch :update, params: { id: question, question: question_params } }
 
-      context 'user is author' do
+      context 'request from author' do
         let(:question) { create(:question, author: user) }
 
         it 'assigns requested question to @question' do
@@ -139,7 +138,7 @@ RSpec.describe QuestionsController, type: :controller do
         end
       end
 
-      context 'user is not author' do
+      context 'request from not author' do
         it 'does not update requested question' do
           question.reload
 
@@ -152,9 +151,9 @@ RSpec.describe QuestionsController, type: :controller do
 
     describe 'POST #delete' do
       let(:post_delete_request) { delete :destroy, params: { id: question } }
-      let!(:question) { create(:question) }
+      let!(:question)           { create(:question)                         }
 
-      context 'user is author' do
+      context 'request from author' do
         let!(:question) { create(:question, author: user) }
 
         it 'assigns requested question to @question' do
@@ -174,7 +173,7 @@ RSpec.describe QuestionsController, type: :controller do
         end
       end
 
-      context 'user is not author' do
+      context 'request from not author' do
         it 'does not destroy requested question' do
           expect { post_delete_request }.not_to change(Question, :count)
         end
