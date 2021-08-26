@@ -12,11 +12,11 @@ RSpec.describe User, type: :model do
     context 'when user is author' do
       let(:question) { create(:question, author: user) }
 
-      it { expect(user.author?(question)).to be_truthy }
+      it { expect(user).to be_author(question) }
     end
 
     context 'when user is not author' do
-      it { expect(user.author?(question)).to be_falsey }
+      it { expect(user).not_to be_author(question) }
     end
   end
 end
