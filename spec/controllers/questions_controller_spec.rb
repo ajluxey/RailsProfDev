@@ -80,11 +80,11 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
-    context 'user is author' do
-      let(:question) { create(:question, author: user) }
+    describe 'GET #edit' do
+      before { get :edit, params: { id: question } }
 
-      describe 'GET #edit' do
-        before { get :edit, params: { id: question } }
+      context 'user is author' do
+        let(:question) { create(:question, author: user) }
 
         it 'assigns requested question to @question' do
           expect(assigns(:question)).to eq question
@@ -95,18 +95,24 @@ RSpec.describe QuestionsController, type: :controller do
         end
       end
 
-      describe 'PATCH #update' do
-        let(:question_params) { attributes_for(:question, :updated) }
+      context 'user is not author' do
+        it { expect(response).to redirect_to question_path(question) }
+      end
+    end
 
-        before { patch :update, params: { id: question, question: question_params } }
+    describe 'PATCH #update' do
+      let(:question_params) { attributes_for(:question, :updated) }
+
+      before { patch :update, params: { id: question, question: question_params } }
+
+      context 'user is author' do
+        let(:question) { create(:question, author: user) }
 
         it 'assigns requested question to @question' do
           expect(assigns(:question)).to eq question
         end
 
         context 'with valid params' do
-          let(:question) { create(:question, author: user) }
-
           it 'updates requested question' do
             question.reload
 
@@ -133,8 +139,22 @@ RSpec.describe QuestionsController, type: :controller do
         end
       end
 
-      describe 'POST #delete' do
-        let(:post_delete_request) { delete :destroy, params: { id: question } }
+      context 'user is not author' do
+        it 'does not update requested question' do
+          question.reload
+
+          expect(question).to have_attributes(attributes_for(:question))
+        end
+
+        it { expect(response).to redirect_to question_path(question) }
+      end
+    end
+
+    describe 'POST #delete' do
+      let(:post_delete_request) { delete :destroy, params: { id: question } }
+      let!(:question) { create(:question) }
+
+      context 'user is author' do
         let!(:question) { create(:question, author: user) }
 
         it 'assigns requested question to @question' do
@@ -153,13 +173,17 @@ RSpec.describe QuestionsController, type: :controller do
           expect(response).to redirect_to questions_path
         end
       end
-    end
 
-    context 'user is not author' do
-      it 'redirect to question show' do
-        delete :destroy, params: { id: question }
+      context 'user is not author' do
+        it 'does not destroy requested question' do
+          expect { post_delete_request }.not_to change(Question, :count)
+        end
 
-        expect(response).to redirect_to question_path(question)
+        it 'redirect to questions' do
+          post_delete_request
+
+          expect(response).to redirect_to question_path(question)
+        end
       end
     end
   end
