@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :question do
     title { "MyString" }
     body { "MyText" }
+    association :author, factory: :user
 
     trait :updated do
       title { "MyNewString" }

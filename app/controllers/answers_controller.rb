@@ -1,34 +1,23 @@
 class AnswersController < ApplicationController
-  before_action :set_answer, only: %i[edit update destroy]
-  before_action :set_question, only: %i[new create]
-
-  def new
-    @answer = @question.answers.new
-  end
-
-  def edit
-  end
+  before_action :set_answer, only: :destroy
+  before_action :required_author!, only: :destroy
 
   def create
-    @answer = @question.answers.build(answer_params)
-    if @answer.save
-      redirect_to @answer
-    else
-      render :new
-    end
-  end
+    @question = Question.find(params[:question_id])
 
-  def update
-    if @answer.update(answer_params)
-      redirect_to @answer
+    @answer = @question.answers.build(answer_params)
+    @answer.author = current_user
+
+    if @answer.save
+      redirect_to @question, notice: 'Your answer successfully created.'
     else
-      render :edit
+      render 'questions/show'
     end
   end
 
   def destroy
     @answer.destroy
-    redirect_to question_answers_path(@answer.question)
+    redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted.'
   end
 
   private
@@ -37,11 +26,11 @@ class AnswersController < ApplicationController
     @answer = Answer.find(params[:id])
   end
 
-  def set_question
-    @question = Question.find(params[:question_id])
-  end
-
   def answer_params
     params.require(:answer).permit(:body, :correct)
+  end
+
+  def required_author!
+    redirect_to question_path(@answer.question), alert: 'You must be author' unless current_user.author?(@answer)
   end
 end

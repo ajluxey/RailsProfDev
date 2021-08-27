@@ -3,6 +3,7 @@ FactoryBot.define do
     body { "MyText" }
     correct { false }
     question
+    association :author, factory: :user
 
     trait :updated do
       body { "MyNewText" }
