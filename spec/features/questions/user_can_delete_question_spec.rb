@@ -28,9 +28,12 @@ feature 'User can delete answer', %q(
       given!(:question) { create(:question, author: user) }
 
       scenario 'tries to delete question' do
+        expect(page).to have_content question.title
+
         click_on 'Delete question'
 
         expect(page).to have_content 'Your question successfully deleted.'
+        expect(page).not_to have_content question.title
       end
     end
   end

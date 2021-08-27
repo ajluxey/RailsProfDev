@@ -1,4 +1,4 @@
-- if !answer.new_record?
+- if answer.persisted?
   tr
     td= answer.author
     td= answer.body

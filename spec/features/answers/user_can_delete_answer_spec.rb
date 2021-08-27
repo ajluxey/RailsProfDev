@@ -28,7 +28,13 @@ feature 'User can delete answer', %q(
       given!(:answer) { create(:answer, author: user) }
 
       scenario 'tries to delete answer' do
-        click_on 'Delete answer'
+        within '.answers' do
+          expect(page).to have_content answer.body
+
+          click_on 'Delete answer'
+
+          expect(page).not_to have_content answer.body
+        end
 
         expect(page).to have_content 'Your answer successfully deleted.'
       end

@@ -15,12 +15,13 @@ p= @question.body
 
     = form.submit 'Create new answer'
 
-table
-  thead
-    th 'Author'
-    th 'Body'
-    th 'Correct'
-    th[collspan="1"] 'Actions'
+.answers
+  table
+    thead
+      th 'Author'
+      th 'Body'
+      th 'Correct'
+      th[collspan="1"] 'Actions'
 
-    tbody
-      = render @question.answers
+      tbody
+        = render @question.answers
