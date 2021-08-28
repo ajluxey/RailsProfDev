@@ -1,8 +1,8 @@
 - if answer.persisted?
   tr
-    td= answer.author
+    td= answer.author.email
     td= answer.body
     td= answer.correct
-    - if current_user && current_user.author?(answer)
+    - if user_signed_in? && current_user.author?(answer)
       td= link_to('Delete answer', answer_path(answer), method: :delete)
 

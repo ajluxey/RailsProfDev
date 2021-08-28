@@ -36,6 +36,19 @@ RSpec.configure do |config|
   config.include ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
 
+
+  Capybara.register_driver :windows_chrome do |app|
+    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome()
+    puts 'Current driver (windows_chrome) requires chromedriver to be launched from windows (C:\Programming\webdrivers\chromedriver>chromedriver)'
+    Capybara::Selenium::Driver.new(app,
+                                   browser: :chrome,
+                                   url: "http://#{ENV['CHROMEDRIVER_IP']}:9515",
+                                   desired_capabilities: capabilities)
+  end
+
+
+  Capybara.javascript_driver = :windows_chrome
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 

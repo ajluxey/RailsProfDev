@@ -6,7 +6,7 @@ RSpec.describe AnswersController, type: :controller do
   before { login(user) }
 
   describe 'POST #create' do
-    let(:post_create_request) { post :create, params: { answer: answer_params, question_id: question } }
+    let(:post_create_request) { post :create, params: { answer: answer_params, question_id: question }, format: :js }
 
     context 'with valid params' do
       let(:answer_params) { attributes_for(:answer) }
@@ -15,10 +15,10 @@ RSpec.describe AnswersController, type: :controller do
         expect { post_create_request }.to change(question.answers, :count).by(1)
       end
 
-      it 'redirect to question show' do
+      it 'render create view' do
         post_create_request
 
-        expect(response).to redirect_to question
+        expect(response).to render_template 'answers/create'
       end
     end
 
@@ -29,10 +29,10 @@ RSpec.describe AnswersController, type: :controller do
         expect { post_create_request }.not_to change(Answer, :count)
       end
 
-      it 're-renders form' do
+      it 'render create view' do
         post_create_request
 
-        expect(response).to render_template 'questions/show'
+        expect(response).to render_template 'answers/create'
       end
     end
   end
