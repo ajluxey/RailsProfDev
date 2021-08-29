@@ -7,12 +7,4 @@ p= @question.body
   = render 'answers/form'
 
 .answers
-  table
-    thead
-      th Author
-      th Body
-      th Correct
-      th[collspan="1"] Actions
-
-      tbody
-        = render @question.answers
+  = render @question.answers

@@ -1,8 +1,24 @@
 - if answer.persisted?
-  tr
-    td= answer.author.email
-    td= answer.body
-    td= answer.correct
-    - if user_signed_in? && current_user.author?(answer)
-      td= link_to('Delete answer', answer_path(answer), method: :delete)
+  = content_tag :div, data: { answer_id: answer.id }
+    p= 'Author: ' + answer.author.email
+    p= answer.body
+    p= 'Correct: ' + answer.correct.to_s
 
+    - if user_signed_in? && current_user.author?(answer)
+      p
+        = link_to('Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }) + ' '
+        = link_to('Delete answer', answer_path(answer), method: :delete)
+
+      = content_tag(:div, '', class: 'answer-update-errors', data: { answer_id: answer.id })
+
+      = form_with model: answer, local: false, data: { answer_id: answer.id },
+              html: { class: 'update-answer', style: 'display: none;' } do |form|
+        p
+          = form.label :body
+          = form.text_area :body
+
+        p
+          = form.label :correct
+          = form.check_box :correct
+
+        p= form.submit 'Update answer'

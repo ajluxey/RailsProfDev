@@ -1,0 +1,6 @@
+$('.answer-update-errors[data-answer-id=<%= @answer.id %>]').html('<%= render 'shared/errors', resource: @answer %>')
+
+<% unless @answer.errors.present? %>
+  $('div[data-answer-id="<%= @answer.id %>"]').html('<%= j render @answer %>')
+  $('p.notice').text('<%= notice %>')
+<% end %>

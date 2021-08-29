@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
-  before_action :set_answer, only: :destroy
-  before_action :required_author!, only: :destroy
+  before_action :set_answer, only: %i[update destroy]
+  before_action :required_author!, only: %i[update destroy]
 
   def create
     @question = Question.find(params[:question_id])
@@ -9,6 +9,12 @@ class AnswersController < ApplicationController
     @answer.author = current_user
     if @answer.save
       flash.now[:notice] = 'Your answer successfully created.'
+    end
+  end
+
+  def update
+    if @answer.update(answer_params)
+      flash.now[:notice] = 'Your answer successfully updated.'
     end
   end
 

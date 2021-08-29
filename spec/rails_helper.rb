@@ -48,6 +48,7 @@ RSpec.configure do |config|
 
 
   Capybara.javascript_driver = :windows_chrome
+  Capybara.default_max_wait_time = 5 # Seconds
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

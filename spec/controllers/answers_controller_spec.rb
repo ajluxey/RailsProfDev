@@ -1,7 +1,6 @@
 RSpec.describe AnswersController, type: :controller do
-  let(:user)     { create(:user)                                   }
-  let(:question) { create(:question)                               }
-  let(:answer)   { create(:answer, question: question, user: user) }
+  let(:user)     { create(:user)                                     }
+  let(:question) { create(:question)                                 }
 
   before { login(user) }
 
@@ -35,6 +34,58 @@ RSpec.describe AnswersController, type: :controller do
         expect(response).to render_template 'answers/create'
       end
     end
+  end
+
+  describe 'PATCH #update' do
+    let(:patch_update_request) { patch :update, format: :js, params: { id: answer, answer: answer_params } }
+    let(:answer_params)        { attributes_for(:answer, :updated) }
+
+    before { patch_update_request }
+
+    context 'request from author' do
+      let(:answer) { create(:answer, question: question, author: user) }
+
+      it 'assigns requested answer to @answer' do
+        expect(assigns(:answer)).to eq answer
+      end
+
+      context 'with valid params' do
+        it 'updates requested answer' do
+          answer.reload
+
+          expect(answer).to have_attributes(answer_params)
+        end
+      end
+
+      context 'with invalid params' do
+        let(:answer_params) { attributes_for(:answer, :invalid) }
+
+        it 'does not update requested answer' do
+          answer.reload
+
+          expect(answer).to have_attributes(attributes_for(:answer))
+        end
+      end
+
+      it 'render update view' do
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'request from not author' do
+      let(:answer) { create(:answer, question: question) }
+
+      it 'does not update requested answer' do
+        answer.reload
+
+        expect(answer).to have_attributes(attributes_for(:answer))
+      end
+
+      it 'redirect to show associated question' do
+        expect(response).to redirect_to question_path(answer.question)
+      end
+    end
+
   end
 
   describe 'POST #delete' do
