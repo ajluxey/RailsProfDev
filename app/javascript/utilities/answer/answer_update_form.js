@@ -2,17 +2,16 @@ export default class AnswerUpdateForm {
   constructor(form) {
     this.form = form
     this.dataId = form.dataset.answerId
-    this.editLink =  document.querySelector(`.edit-answer-link[data-answer-id="${this.dataId}"]`)
-    this.closeLink = this.createCloseLink()
-
-    this.form.addEventListener('ajax:success', this.update.bind(this))
+    this.editLink =  this.form.parentNode.querySelector(`.edit-answer-link[data-answer-id="${this.dataId}"]`)
+    this.closeLink = this.setCloseLink()
 
     this.linksBehavior()
   }
 
-  update () {
-    const updatedForm = document.querySelector(`form.update-answer[data-answer-id="${this.dataId}"]`)
-    this.constructor(updatedForm)
+  setCloseLink () {
+    let closeLink = this.form.querySelector(`a.close-edit-answer-link[data-answer-id="${this.dataId}"]`)
+    if (!closeLink) closeLink = this.createCloseLink()
+    return closeLink
   }
 
   createCloseLink () {

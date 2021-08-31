@@ -1,8 +1,15 @@
 - if answer.persisted?
   = content_tag :div, data: { answer_id: answer.id }
+    - if answer.best
+      i= 'Best answer'
+
     p= 'Author: ' + answer.author.email
     p= answer.body
-    p= 'Correct: ' + answer.correct.to_s
+
+    - if user_signed_in? && current_user.author?(answer.question)
+      - unless answer.best
+        = content_tag :div, class: 'highlight-answer',data: { answer_id: answer.id } do
+          = button_to('Highlight as best answer', update_best_answer_path(answer), method: :patch, remote: true)
 
     - if user_signed_in? && current_user.author?(answer)
       p

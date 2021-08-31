@@ -14,3 +14,6 @@ import "utilities"
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
+import AnswersList from "../utilities/answer/answers_list";
+window.AnswerList = AnswersList

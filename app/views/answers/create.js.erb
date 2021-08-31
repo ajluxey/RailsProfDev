@@ -1,7 +1,15 @@
 $('.answer-create-errors').html('<%= render 'shared/errors', resource: @answer %>')
 
 <% if @answer.persisted? %>
-  $('.answers').append('<%= j render @answer %>')
+  var answersDOM = document.querySelector('div.answers')
+  var answersList = new AnswerList(answersDOM)
+
+  var answerDocument = new DOMParser().parseFromString('<%= j render @answer %>', 'text/html')
+  var answerDOM = answerDocument.querySelector(`div[data-answer-id="${<%= @answer.id %>}"]`)
+
+  answersList.appendNewAnswer(answerDOM)
+
+//  $('.answers').append('<%= j render @answer %>')
   $('p.notice').text('<%= notice %>')
 
   $('#answer_body').val('')

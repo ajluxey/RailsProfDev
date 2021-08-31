@@ -1,0 +1,15 @@
+var answersDOM = document.querySelector('div.answers')
+var answersList = new AnswerList(answersDOM)
+
+var answer = answersList.answersMap.get((<%= @answer.id %>).toString())
+answersList.highlightAnswer(answer)
+
+<% if @previous_best.present? %>
+  var answerDocument = new DOMParser().parseFromString('<%= j render @previous_best %>', 'text/html')
+  var previousBestDOM = answerDocument.querySelector(`div[data-answer-id="${<%= @previous_best.id %>}"]`)
+
+  answersList.updateAnswer((<%= @previous_best.id %>).toString(), previousBestDOM)
+<% end %>
+
+//$('div[data-answer-id="<%= @answer.id %>"]').html('<%= j render @answer %>')
+$('p.notice').text('<%= notice %>')
