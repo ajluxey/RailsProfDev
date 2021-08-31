@@ -24,6 +24,6 @@ class Answer < ApplicationRecord
   private
 
   def validation_one_best_answer
-    errors.add(:question, 'already have best answer') if best == true && question.answers.where(best: true).count > 1
+    errors.add(:question, 'already have best answer') if best == true && question.answers.where(best: true).count > 0
   end
 end

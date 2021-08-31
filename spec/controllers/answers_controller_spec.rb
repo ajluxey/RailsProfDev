@@ -94,7 +94,8 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #update_best' do
-    let(:answer) { create(:answer, question: question) }
+    let(:question) { create(:question)                   }
+    let(:answer)   { create(:answer, question: question) }
     let(:patch_update_best_request) { patch :update_best, format: :js, params: { id: answer } }
 
     # before { patch_update_best_request }
@@ -108,16 +109,13 @@ RSpec.describe AnswersController, type: :controller do
     context 'request from author of question' do
       let(:question) { create(:question, author: user) }
 
-      before { patch_update_best_request }
-
-      # Я не понимаю почему падает
       context 'when another best answer present' do
-        let(:question) { create(:question, author: user) }
         let!(:another_answer) { create(:answer, question: question, best: true) }
 
         it 'remove best status from another answer' do
           expect(another_answer.best).to be_truthy
 
+          patch_update_best_request
           another_answer.reload
 
           expect(another_answer.best).to be_falsey
@@ -125,6 +123,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'update requested answer as best' do
+        patch_update_best_request
         answer.reload
 
         expect(answer.best).to be_truthy
@@ -132,6 +131,8 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'render update best view' do
+        patch_update_best_request
+
         expect(response).to render_template :update_best
       end
     end

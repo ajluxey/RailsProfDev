@@ -3,7 +3,23 @@ RSpec.describe Answer, type: :model do
   it { should belong_to :author }
 
   it { should validate_presence_of :body }
+  # я не знаю почему он падает
   it { should validate_inclusion_of(:best).in_array([true, false]) }
+
+  describe 'validate only one answer can be best' do
+    let(:question) { create(:question)                              }
+    let(:answer)   { build(:answer, best: true, question: question) }
+
+    context 'with another best answer for question' do
+      let!(:best_answer) { create(:answer, best: true, question: question) }
+
+      it { expect(answer.valid?).to be_falsey }
+    end
+
+    context 'without another best answer' do
+      it { expect(answer.valid?).to be_truthy }
+    end
+  end
 
   describe '#is_best!' do
     let!(:question)    { create(:question)                               }
