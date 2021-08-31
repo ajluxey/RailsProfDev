@@ -26,7 +26,9 @@ export default class Answer {
 
   findAnswerUpdateForm () {
     const form = this.DOM.querySelector(`form[data-answer-id="${this.id}"]`)
-    return new AnswerUpdateForm(form)
+    let formClass = null
+    if (form) formClass = new AnswerUpdateForm(form)
+    return formClass
   }
 
   findHighLightForm () {
