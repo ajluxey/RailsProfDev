@@ -52,5 +52,6 @@ export default class AnswersList {
   removeAnswer (id) {
     const answer = this.answersMap.get(id)
     answer.DOM.remove()
+    this.answersMap.delete(id)
   }
 }

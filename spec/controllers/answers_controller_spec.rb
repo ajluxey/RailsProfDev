@@ -23,7 +23,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'render create view' do
         post_create_request
 
-        expect(response).to render_template 'answers/create'
+        expect(response).to render_template :create
       end
     end
 
@@ -37,7 +37,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'render create view' do
         post_create_request
 
-        expect(response).to render_template 'answers/create'
+        expect(response).to render_template :create
       end
     end
   end
@@ -154,7 +154,7 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'POST #delete' do
-    let(:post_delete_request) { post :destroy, params: { id: answer } }
+    let(:post_delete_request) { post :destroy, format: :js, params: { id: answer } }
 
     context 'request from author' do
       let!(:answer) { create(:answer, author: user, question: question) }
@@ -169,10 +169,10 @@ RSpec.describe AnswersController, type: :controller do
         expect { post_delete_request }.to change(Answer, :count).by(-1)
       end
 
-      it 'redirect to show associated question' do
+      it 'render destroy view' do
         post_delete_request
 
-        expect(response).to redirect_to question_path(answer.question)
+        expect(response).to render_template :destroy
       end
     end
 
