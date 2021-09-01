@@ -9,16 +9,21 @@ class Answer < ApplicationRecord
   validate  :validation_one_best_answer
 
   def is_best!
-    previous_best = question.remove_best_answer
-    self.best = true
-    save
-
-    previous_best
+    previous_best_answer = question.best_answer
+    begin
+      Answer.transaction do
+        previous_best_answer.not_best! if previous_best_answer.present?
+        update!(best: true)
+      end
+    rescue ActiveRecord::RecordInvalid
+      false
+    else
+      previous_best_answer
+    end
   end
 
   def not_best!
-    self.best = false
-    save
+    update!(best: false)
   end
 
   private

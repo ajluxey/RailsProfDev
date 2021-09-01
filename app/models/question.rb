@@ -4,12 +4,8 @@ class Question < ApplicationRecord
 
   validates :title, :body, presence: true
 
-  def remove_best_answer
-    if answers.where(best: true).count > 0
-      answer = answers.where(best: true).first
-      answer.not_best!
-
-      answer
-    end
+  def best_answer
+    best_answer_scope = answers.where(best: true)
+    best_answer_scope.first if best_answer_scope.count.positive?
   end
 end

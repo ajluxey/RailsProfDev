@@ -6,14 +6,23 @@ RSpec.describe Question, type: :model do
   it { should validate_presence_of :title }
   it { should validate_presence_of :body }
 
-  describe '#remove_best_answer' do
-    let(:question) { create(:question)                                  }
-    let(:answers)  { create(:answer, 4, best: true, question: question) }
+  describe '#best_answer' do
+    let(:question) { create(:question) }
 
-    it 'sets attribute best to false for all answers' do
-      question.remove_best_answer
+    context 'when have best answer' do
+      let!(:answer) { create(:answer, question: question, best: true) }
 
-      expect(question.answers.where(best: true).count).to eq 0
+      it 'returns it' do
+        expect(question.best_answer).to eq answer
+      end
+    end
+
+    context 'when have not best answer' do
+      let!(:answer) { create(:answer, question: question) }
+
+      it 'returns nil' do
+        expect(question.best_answer).to be_nil
+      end
     end
   end
 end
