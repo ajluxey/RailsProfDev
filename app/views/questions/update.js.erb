@@ -1,0 +1,7 @@
+$('.question-update-errors').html('<%= render 'shared/errors', resource: @question %>')
+
+<% unless @question.errors.present? %>
+  $('p.notice').text('<%= notice %>')
+
+  $('.question').html('<%= j render 'question_in_show' %>')
+<% end %>
