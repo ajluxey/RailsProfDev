@@ -12,7 +12,7 @@ feature 'User can view questions', %q(
   scenario 'Any user tries see all questions' do
     visit questions_path
 
-    expect(page.find(:table)).to have_content(questions.first.body).exactly(count).times
+    expect(page.find(:table)).to have_content(questions.first.title).exactly(count).times
   end
 
   scenario 'Any user tries to see the specific question' do

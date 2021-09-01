@@ -150,8 +150,8 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     describe 'POST #delete' do
-      let(:post_delete_request) { delete :destroy, params: { id: question } }
-      let!(:question)           { create(:question)                         }
+      let(:post_delete_request) { delete :destroy, format: :js, params: { id: question } }
+      let!(:question) { create(:question) }
 
       context 'request from author' do
         let!(:question) { create(:question, author: user) }

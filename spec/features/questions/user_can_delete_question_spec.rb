@@ -1,5 +1,5 @@
-feature 'User can delete answer', %q(
-  In order to delete answer for question
+feature 'User can delete question', %q(
+  In order to delete question from site
   As an author of question
   I'd like to be able to delete the answer
 ) do
@@ -7,17 +7,19 @@ feature 'User can delete answer', %q(
 
   scenario 'Unauthenticated user tries to delete question' do
     visit questions_path
+    click_on 'Show'
 
     expect(page).not_to have_content 'Delete question'
   end
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     given(:user) { create(:user) }
 
     background do
       login_as(user)
 
       visit questions_path
+      click_on 'Show'
     end
 
     scenario 'is not author tries to delete question' do

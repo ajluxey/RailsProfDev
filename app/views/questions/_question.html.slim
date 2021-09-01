@@ -1,8 +1,5 @@
 tr
-  td= question.title
-  td= question.body
   td= question.author
+  td= question.title
   td= link_to('Show', question)
-  - if current_user && current_user.author?(question)
-    td= link_to('Delete question', question, method: :delete)
 
