@@ -5,13 +5,13 @@ feature 'User can delete answer', %q(
 ) do
   given!(:answer) { create(:answer) }
 
-  scenario 'Unauthenticated user tries to delete question' do
+  scenario 'Unauthenticated user tries to delete question', js: true do
     visit question_path(answer.question)
 
     expect(page).not_to have_content 'Delete answer'
   end
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     given(:user) { create(:user) }
 
     background do

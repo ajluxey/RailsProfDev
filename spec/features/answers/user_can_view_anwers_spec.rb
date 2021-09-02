@@ -12,6 +12,9 @@ feature 'User can view answers for question', %q(
     click_on 'Show'
 
     expect(page).to have_current_path(question_path(question))
-    expect(page.find(:table)).to have_content(answers.first.body).exactly(answers_count).times
+
+    within '.answers' do
+      expect(page).to have_content(answers.first.body).exactly(answers_count).times
+    end
   end
 end

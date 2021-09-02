@@ -1,0 +1,13 @@
+$('.answer-update-errors[data-answer-id=<%= @answer.id %>]').html('<%= render 'shared/errors', resource: @answer %>')
+
+<% unless @answer.errors.present? %>
+  $('p.notice').text('<%= notice %>')
+
+  var answersDOM = document.querySelector('div.answers')
+  var answersList = new AnswerList(answersDOM)
+
+  var answerDocument = new DOMParser().parseFromString('<%= j render @answer %>', 'text/html')
+  var answerDOM = answerDocument.querySelector(`div[data-answer-id="${<%= @answer.id %>}"]`)
+
+  answersList.updateAnswer((<%= @answer.id %>).toString(), answerDOM)
+<% end %>

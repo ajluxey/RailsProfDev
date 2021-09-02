@@ -1,0 +1,6 @@
+var answersDOM = document.querySelector('div.answers')
+var answersList = new AnswerList(answersDOM)
+
+answersList.removeAnswer((<%= @answer.id %>).toString())
+
+$('p.notice').text('<%= notice %>')

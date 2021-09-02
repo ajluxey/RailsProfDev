@@ -2,10 +2,9 @@ p= link_to 'Create new question', new_question_path
 
 table
   thead
-    th 'Title'
-    th 'Body'
     th 'Author'
-    th[collspan="2"] 'Actions'
+    th 'Title'
+    th 'Actions'
 
   tbody
     = render @questions

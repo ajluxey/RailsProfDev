@@ -102,7 +102,7 @@ RSpec.describe QuestionsController, type: :controller do
     describe 'PATCH #update' do
       let(:question_params) { attributes_for(:question, :updated) }
 
-      before { patch :update, params: { id: question, question: question_params } }
+      before { patch :update, format: :js, params: { id: question, question: question_params } }
 
       context 'request from author' do
         let(:question) { create(:question, author: user) }
@@ -117,10 +117,6 @@ RSpec.describe QuestionsController, type: :controller do
 
             expect(question).to have_attributes(question_params)
           end
-
-          it 'redirect to show' do
-            expect(response).to redirect_to question
-          end
         end
 
         context 'with invalid params' do
@@ -131,10 +127,10 @@ RSpec.describe QuestionsController, type: :controller do
 
             expect(question).to have_attributes(attributes_for(:question))
           end
+        end
 
-          it 'rerender edit' do
-            expect(response).to render_template :edit
-          end
+        it 'render update view' do
+          expect(response).to render_template :update
         end
       end
 
@@ -150,8 +146,8 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     describe 'POST #delete' do
-      let(:post_delete_request) { delete :destroy, params: { id: question } }
-      let!(:question)           { create(:question)                         }
+      let(:post_delete_request) { delete :destroy, format: :js, params: { id: question } }
+      let!(:question) { create(:question) }
 
       context 'request from author' do
         let!(:question) { create(:question, author: user) }

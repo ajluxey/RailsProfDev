@@ -11,7 +11,7 @@ feature 'User can create answer', %q(
     expect(page).not_to have_content 'Create new answer'
   end
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     given(:user) { create(:user) }
 
     background do

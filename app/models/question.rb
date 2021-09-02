@@ -3,4 +3,9 @@ class Question < ApplicationRecord
   has_many :answers, dependent: :destroy
 
   validates :title, :body, presence: true
+
+  def best_answer
+    best_answer_scope = answers.where(best: true)
+    best_answer_scope.first if best_answer_scope.count.positive?
+  end
 end

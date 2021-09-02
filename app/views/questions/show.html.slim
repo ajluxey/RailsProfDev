@@ -1,27 +1,10 @@
-h3= @question.title
-p= @question.body
+.question
+  = render 'question_in_show'
 
 -if user_signed_in?
-  h4= 'Create new answer'
+  h3= 'Create new answer'
 
-  = render 'shared/errors', resource: @answer
-
-  = form_with model: [@question, @answer], local: true do |form|
-    = form.label :body
-    = form.text_area :body
-
-    = form.label :correct
-    = form.check_box :correct
-
-    = form.submit 'Create new answer'
+  = render 'answers/form'
 
 .answers
-  table
-    thead
-      th 'Author'
-      th 'Body'
-      th 'Correct'
-      th[collspan="1"] 'Actions'
-
-      tbody
-        = render @question.answers
+  = render @question.answers
