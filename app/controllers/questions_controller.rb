@@ -30,7 +30,7 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if @question.update(question_params)
+    if FilesUploadService.update_with_files(@question, question_params)
       flash.now[:notice] = 'Your question successfully updated.'
     end
   end
@@ -43,11 +43,11 @@ class QuestionsController < ApplicationController
   private
 
   def set_question
-    @question = Question.find(params[:id])
+    @question = Question.with_attached_files.find(params[:id])
   end
 
   def question_params
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, files_blob_ids: [], files: [])
   end
 
   def required_author!

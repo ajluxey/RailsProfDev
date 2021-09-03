@@ -129,6 +129,23 @@ RSpec.describe QuestionsController, type: :controller do
           end
         end
 
+        context 'files updates when another file exists' do
+          let(:patch_request) { patch :update, format: :js, params: { id: question, question: question_params } }
+
+          context 'by adding' do
+            let(:question_params) { { files: [fixture_file_upload("#{Rails.root.join('spec', 'rails_helper.rb')}")] } }
+
+            it { expect { patch_request }.to change(question.files, :count).by(1) }
+          end
+
+          context 'by deleting file' do
+            let!(:question) { create(:question_with_file) }
+            let(:question_params) { { files_blob_ids: ['', question.files.first.id.to_s] } }
+
+            it { expect { patch_request }.to change(ActiveStorage::Attachment, :count).by(-1) }
+          end
+        end
+
         it 'render update view' do
           expect(response).to render_template :update
         end
