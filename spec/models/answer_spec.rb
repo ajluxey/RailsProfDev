@@ -3,8 +3,6 @@ RSpec.describe Answer, type: :model do
   it { should belong_to :author }
 
   it { should validate_presence_of :body }
-  # я не знаю почему он падает
-  # it { should validate_inclusion_of(:best).in_array([true, false]) }
 
   describe ':best validate inclusion of true false' do
     context 'with valid entry' do
@@ -35,6 +33,12 @@ RSpec.describe Answer, type: :model do
     end
 
     context 'without another best answer' do
+      it { expect(answer).to be_valid }
+    end
+
+    context 'when saved best answer updated' do
+      let(:answer) { create(:answer, best: true) }
+
       it { expect(answer).to be_valid }
     end
   end

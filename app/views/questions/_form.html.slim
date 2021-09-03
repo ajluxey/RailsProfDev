@@ -9,7 +9,7 @@
 
   p
     = form.label :files
-    = form.file_field :files, multiple: true
+    = form.file_field :files, multiple: true, direct_upload: true
 
   - if @question.files.attached?
     p
@@ -18,7 +18,6 @@
         p
           = block.check_box
           = block.label
-          = "id = #{block.object.id}"
 
 
   p
