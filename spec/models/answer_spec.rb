@@ -20,6 +20,10 @@ RSpec.describe Answer, type: :model do
     end
   end
 
+  it 'have many attached files' do
+    expect(Answer.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
+  end
+
   describe ':best validate one best answer' do
     let(:question) { create(:question)                              }
     let(:answer)   { build(:answer, best: true, question: question) }

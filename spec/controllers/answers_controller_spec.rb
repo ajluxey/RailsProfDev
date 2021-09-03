@@ -46,7 +46,9 @@ RSpec.describe AnswersController, type: :controller do
     let(:patch_update_request) { patch :update, format: :js, params: { id: answer, answer: answer_params } }
     let(:answer_params)        { attributes_for(:answer, :updated) }
 
-    before { patch_update_request }
+    before do |test|
+      patch_update_request unless test.metadata[:update_with_files]
+    end
 
     context 'request from author' do
       let(:answer) { create(:answer, question: question, author: user) }
@@ -75,6 +77,22 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'render update view' do
         expect(response).to render_template :update
+      end
+
+      context 'files updates when another file exists', :update_with_files do
+        let!(:answer) { create(:answer_with_file, author: user) }
+
+        context 'by adding file' do
+          let(:answer_params) { { files: [fixture_file_upload("#{Rails.root.join('spec', 'spec_helper.rb')}")] } }
+
+          it { expect { patch_update_request }.to change(answer.files, :count).by(1) }
+        end
+
+        context 'by deleting file' do
+          let(:answer_params) { { files_blob_ids: ['', answer.files.first.id.to_s] } }
+
+          it { expect { patch_update_request }.to change(answer.files, :count).by(-1) }
+        end
       end
     end
 

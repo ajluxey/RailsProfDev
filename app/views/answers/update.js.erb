@@ -1,3 +1,4 @@
+console.log($('.answer-update-errors[data-answer-id=<%= @answer.id %>]'))
 $('.answer-update-errors[data-answer-id=<%= @answer.id %>]').html('<%= render 'shared/errors', resource: @answer %>')
 
 <% unless @answer.errors.present? %>

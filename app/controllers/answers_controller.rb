@@ -15,7 +15,7 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if @answer.update(answer_params)
+    if FilesUploadService.update_with_files(@answer, answer_params)
       flash.now[:notice] = 'Your answer successfully updated.'
     end
   end
@@ -37,7 +37,7 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files_blob_ids: [], files: [])
   end
 
   def required_author!

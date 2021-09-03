@@ -4,6 +4,9 @@ class Answer < ApplicationRecord
   belongs_to :question
   belongs_to :author, class_name: 'User'
 
+  has_many_attached :files
+
+
   validates :body, presence: true
   validates :best, inclusion: { in: [true, false] }
   validate  :validation_one_best_answer
@@ -29,6 +32,8 @@ class Answer < ApplicationRecord
   private
 
   def validation_one_best_answer
-    errors.add(:question, 'already have best answer') if best == true && question.answers.where(best: true).count > 0
+    if best == true && question.answers.where(best: true).count > 0 && question.answers.where(best: true).first != self
+      errors.add(:question, 'already have best answer')
+    end
   end
 end

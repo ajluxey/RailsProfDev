@@ -82,7 +82,7 @@ feature 'User can update question', %q(
             check "question_files_blob_ids_#{question.files.first.id}"
             click_on 'Update'
 
-            expect(page).not_to have_link question.files.first.filename.to_s  # 'rails_helper.rb'
+            expect(page).not_to have_link 'rails_helper.rb'
           end
         end
       end

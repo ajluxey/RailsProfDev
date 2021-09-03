@@ -1,0 +1,7 @@
+= content_tag(:div, '', class: "answer-update-errors", data: {answer_id: answer.id})
+
+= form_with model: answer, local: false, data: { answer_id: answer.id },
+        html: { class: 'update-answer', style: 'display: none;' } do |form|
+  = render 'answers/form_content', answer: answer, form: form
+
+  p= form.submit 'Update answer'

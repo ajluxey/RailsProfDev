@@ -48,6 +48,39 @@ feature 'user can update answer', %q(
 
         expect(page).to have_content "Body can't be blank"
       end
+
+      scenario 'by adding files' do
+        within('.answers') do
+          attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+          click_on 'Update'
+
+          expect(page).to have_link 'rails_helper.rb'
+          expect(page).to have_link 'spec_helper.rb'
+        end
+      end
+
+      describe 'with files' do
+        given!(:answer) { create(:answer_with_file, author: user, question: question) }
+
+        scenario 'by adding files' do
+          within('.answers') do
+            attach_file 'Files', "#{Rails.root}/spec/spec_helper.rb"
+            click_on 'Update'
+
+            expect(page).to have_link 'rails_helper.rb'
+            expect(page).to have_link 'spec_helper.rb'
+          end
+        end
+
+        scenario 'by deleting files' do
+          within('.answers') do
+            check "answer_files_blob_ids_#{answer.files.first.id}"
+            click_on 'Update'
+
+            expect(page).not_to have_link 'rails_helper.rb'
+          end
+        end
+      end
     end
 
     scenario 'not author tries to update answer' do

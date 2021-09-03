@@ -100,9 +100,12 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     describe 'PATCH #update' do
+      let(:patch_update_request) { patch :update, format: :js, params: { id: question, question: question_params } }
       let(:question_params) { attributes_for(:question, :updated) }
 
-      before { patch :update, format: :js, params: { id: question, question: question_params } }
+      before do |test|
+        patch_update_request unless test.metadata[:update_with_files]
+      end
 
       context 'request from author' do
         let(:question) { create(:question, author: user) }
@@ -129,20 +132,19 @@ RSpec.describe QuestionsController, type: :controller do
           end
         end
 
-        context 'files updates when another file exists' do
-          let(:patch_request) { patch :update, format: :js, params: { id: question, question: question_params } }
+        context 'files updates when another file exists', :update_with_files do
+          let!(:question) { create(:question_with_file, author: user) }
 
           context 'by adding' do
             let(:question_params) { { files: [fixture_file_upload("#{Rails.root.join('spec', 'rails_helper.rb')}")] } }
 
-            it { expect { patch_request }.to change(question.files, :count).by(1) }
+            it { expect { patch_update_request }.to change(question.files, :count).by(1) }
           end
 
           context 'by deleting file' do
-            let!(:question) { create(:question_with_file) }
             let(:question_params) { { files_blob_ids: ['', question.files.first.id.to_s] } }
 
-            it { expect { patch_request }.to change(ActiveStorage::Attachment, :count).by(-1) }
+            it { expect { patch_update_request }.to change(ActiveStorage::Attachment, :count).by(-1) }
           end
         end
 

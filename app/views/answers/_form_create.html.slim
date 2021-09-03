@@ -1,8 +1,6 @@
-.answer-create-errors
+= content_tag(:div, '', class: "answer-create-errors")
 
 = form_with model: [@question, @answer], local: false, html: { class: 'create-answer' } do |form|
-  p
-    = form.label :body
-    = form.text_area :body
+  = render 'answers/form_content', answer: @answer, form: form
 
   p= form.submit 'Create new answer'
