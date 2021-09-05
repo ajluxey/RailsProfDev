@@ -50,7 +50,7 @@ feature 'user can update answer', %q(
       end
 
       scenario 'by adding files' do
-        within('.answers') do
+        within(%Q(div[data-answer-id="#{answer.id}"])) do
           attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
           click_on 'Update'
 
@@ -74,7 +74,7 @@ feature 'user can update answer', %q(
         end
 
         scenario 'by deleting files' do
-          within('.answers') do
+          within(%Q(div[data-answer-id="#{answer.id}"])) do
             check "answer_files_blob_ids_#{answer.files.first.id}"
             click_on 'Update'
 
