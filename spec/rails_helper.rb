@@ -37,18 +37,7 @@ RSpec.configure do |config|
   config.include FeatureHelpers, type: :feature
   config.include ActionDispatch::TestProcess
 
-
-  Capybara.register_driver :windows_chrome do |app|
-    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome()
-    puts 'Current driver (windows_chrome) requires chromedriver to be launched from windows (C:\Programming\webdrivers\chromedriver>chromedriver)'
-    Capybara::Selenium::Driver.new(app,
-                                   browser: :chrome,
-                                   url: "http://#{ENV['CHROMEDRIVER_IP']}:9515",
-                                   desired_capabilities: capabilities)
-  end
-
-
-  Capybara.javascript_driver = :windows_chrome
+  Capybara.javascript_driver = :selenium_chrome
   Capybara.default_max_wait_time = 1 # Seconds
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures

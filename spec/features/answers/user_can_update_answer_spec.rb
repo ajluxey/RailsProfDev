@@ -62,9 +62,10 @@ feature 'user can update answer', %q(
       describe 'with files' do
         given!(:answer) { create(:answer_with_file, author: user, question: question) }
 
-        scenario 'by adding files' do
-          within('.answers') do
+        scenario 'by adding file' do
+          within(%Q(div[data-answer-id="#{answer.id}"])) do
             attach_file 'Files', "#{Rails.root}/spec/spec_helper.rb"
+            page.find("#answer_files_blob_ids_#{answer.files.first.id}").set(false)
             click_on 'Update'
 
             expect(page).to have_link 'rails_helper.rb'

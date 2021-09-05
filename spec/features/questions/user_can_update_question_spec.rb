@@ -67,7 +67,7 @@ feature 'User can update question', %q(
       describe 'with files' do
         given!(:question) { create(:question_with_file, author: user) }
 
-        scenario 'by adding files' do
+        scenario 'by adding file' do
           within('.question') do
             attach_file 'Files', "#{Rails.root}/spec/spec_helper.rb"
             click_on 'Update'
