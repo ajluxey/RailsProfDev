@@ -32,7 +32,7 @@ class Answer < ApplicationRecord
   private
 
   def validation_one_best_answer
-    if best == true && question.answers.where(best: true).count > 0 && question.answers.where(best: true).first != self
+    if best? && question.answers.where(best: true).count > 0 && question.answers.where(best: true).first != self
       errors.add(:question, 'already have best answer')
     end
   end
