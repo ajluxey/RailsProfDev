@@ -35,20 +35,10 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
+  config.include ActionDispatch::TestProcess
 
-
-  Capybara.register_driver :windows_chrome do |app|
-    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome()
-    puts 'Current driver (windows_chrome) requires chromedriver to be launched from windows (C:\Programming\webdrivers\chromedriver>chromedriver)'
-    Capybara::Selenium::Driver.new(app,
-                                   browser: :chrome,
-                                   url: "http://#{ENV['CHROMEDRIVER_IP']}:9515",
-                                   desired_capabilities: capabilities)
-  end
-
-
-  Capybara.javascript_driver = :windows_chrome
-  Capybara.default_max_wait_time = 5 # Seconds
+  Capybara.javascript_driver = :selenium_chrome
+  Capybara.default_max_wait_time = 1 # Seconds
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -80,6 +70,10 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  config.after(:all) do
+    FileUtils.rm_rf("#{Rails.root}/tmp/storage")
+  end
 end
 
 Shoulda::Matchers.configure do |config|

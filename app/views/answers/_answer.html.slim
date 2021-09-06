@@ -6,6 +6,10 @@
     p= 'Author: ' + answer.author.email
     p= answer.body
 
+    - if answer.files.attached?
+      - answer.files.each do |file|
+        p= link_to file.filename.to_s, url_for(file), target: "_blank"
+
     - if user_signed_in? && current_user.author?(answer.question)
       - unless answer.best
         = content_tag :div, class: 'highlight-answer',data: { answer_id: answer.id } do
@@ -16,16 +20,4 @@
         = link_to('Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }) + ' '
         = link_to('Delete answer', answer_path(answer), method: :delete, remote: true)
 
-      = content_tag(:div, '', class: 'answer-update-errors', data: { answer_id: answer.id })
-
-      = form_with model: answer, local: false, data: { answer_id: answer.id },
-              html: { class: 'update-answer', style: 'display: none;' } do |form|
-        p
-          = form.label :body
-          = form.text_area :body
-
-        p
-          = form.label :correct
-          = form.check_box :correct
-
-        p= form.submit 'Update answer'
+        = render 'answers/form_update', answer: answer

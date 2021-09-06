@@ -1,0 +1,15 @@
+p
+  = form.label :body
+  = form.text_area :body
+
+p
+  = form.label :files
+  = form.file_field :files, multiple: true, direct_upload: true
+
+  - if answer.files.attached?
+    p
+      = form.label :files_blob_ids, 'Delete: '
+      = form.collection_check_boxes :files_blob_ids, answer.files, :id, ->(file) { file.filename.to_s } do |block|
+        p
+          = block.check_box
+          = block.label

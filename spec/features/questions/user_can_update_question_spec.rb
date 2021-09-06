@@ -53,6 +53,39 @@ feature 'User can update question', %q(
 
         expect(page).to have_content "Title can't be blank"
       end
+
+      scenario 'by adding files' do
+        within('.question') do
+          attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+          click_on 'Update'
+
+          expect(page).to have_link 'rails_helper.rb'
+          expect(page).to have_link 'spec_helper.rb'
+        end
+      end
+
+      describe 'with files' do
+        given!(:question) { create(:question_with_file, author: user) }
+
+        scenario 'by adding file' do
+          within('.question') do
+            attach_file 'Files', "#{Rails.root}/spec/spec_helper.rb"
+            click_on 'Update'
+
+            expect(page).to have_link 'rails_helper.rb'
+            expect(page).to have_link 'spec_helper.rb'
+          end
+        end
+
+        scenario 'by deleting files' do
+          within('.question') do
+            check "question_files_blob_ids_#{question.files.first.id}"
+            click_on 'Update'
+
+            expect(page).not_to have_link 'rails_helper.rb'
+          end
+        end
+      end
     end
   end
 end

@@ -65,9 +65,11 @@ feature 'User can choose best answer', %q(
         scenario 'hilglights best answer and can see only one' do
           visit question_path(question)
 
-          click_button 'Highlight as best answer'
+          within('.answers') do
+            click_button 'Highlight as best answer'
 
-          expect(page).to have_content('Best answer').once
+            expect(page).to have_content('Best answer').once
+          end
         end
       end
     end

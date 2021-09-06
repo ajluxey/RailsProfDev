@@ -4,7 +4,7 @@ export default class QuestionUpdateForm {
     this.editLink =  this.DOM.parentNode.querySelector('.edit-question-link')
     this.closeLink = this.setCloseLink()
 
-    this.linksBehavior()
+    this.behaviour()
   }
 
   setCloseLink () {
@@ -23,6 +23,14 @@ export default class QuestionUpdateForm {
     return link
   }
 
+  behaviour() {
+    this.DOM.addEventListener('ajax:success', () => {
+      this.update()
+    })
+
+    this.linksBehavior()
+  }
+
   linksBehavior () {
     this.editLink.addEventListener('click', (event) => {
       event.preventDefault()
@@ -37,5 +45,10 @@ export default class QuestionUpdateForm {
       $(this.editLink).show()
       $(this.DOM).hide()
     })
+  }
+
+  update () {
+    let updateFormDOM = document.querySelector('form.update-question')
+    this.constructor(updateFormDOM)
   }
 }

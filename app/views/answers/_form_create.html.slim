@@ -1,0 +1,6 @@
+= content_tag(:div, '', class: "answer-create-errors")
+
+= form_with model: [@question, @answer], local: false, html: { class: 'create-answer' } do |form|
+  = render 'answers/form_content', answer: @answer, form: form
+
+  p= form.submit 'Create new answer'
