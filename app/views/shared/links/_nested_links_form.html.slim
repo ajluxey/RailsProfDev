@@ -1,0 +1,7 @@
+p
+  = form.fields_for :links do |l|
+    p= l.label :name, 'Link name'
+    p= l.text_field :name
+
+    p= l.label :url, 'URL'
+    p= l.text_field :url
