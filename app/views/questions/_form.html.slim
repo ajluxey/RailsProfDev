@@ -19,8 +19,7 @@
           = block.check_box
           = block.label
 
-  = links_for(@question)
-  = render 'shared/links/nested_links_form', form: form
+  = render 'links/nested_links_form', form: form
 
   p
     = form.submit

@@ -10,12 +10,12 @@ class QuestionsController < ApplicationController
 
   def show
     @answer = Answer.new
-    @answer.links.build
+    # @answer.links.build
   end
 
   def new
     @question = Question.new
-    @question.links.build
+    # @question.links.build
   end
 
   def edit
@@ -26,8 +26,6 @@ class QuestionsController < ApplicationController
 
     if @question.save
       redirect_to @question, notice: 'Your question successfully created'
-    else
-      render :new
     end
   end
 
@@ -49,7 +47,10 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, files_blob_ids: [], files: [], links_attributes: %i[name url])
+    params.require(:question).permit(:title, :body,
+                                     files_blob_ids: [],
+                                     files: [],
+                                     links_attributes: %i[id name url _destroy])
   end
 
   def required_author!

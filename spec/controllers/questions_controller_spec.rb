@@ -26,8 +26,6 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:answer)).to be_a_new(Answer)
     end
 
-    it 'assigns new Link to @answer.links'
-
     it 'render show view' do
       expect(response).to render_template :show
     end
@@ -45,18 +43,14 @@ RSpec.describe QuestionsController, type: :controller do
         expect(assigns(:question)).to be_a_new(Question)
       end
 
-      it 'assigns new Link to @question.links' do
-        expect(assigns(:question).links.first).to be_a_new(Link)
-      end
-
       it 'render new view' do
         expect(response).to render_template :new
       end
     end
 
     describe 'POST #create' do
-      let(:post_create_request) { post :create, params: { question: question_params } }
-      let(:user)                { create(:user)                                       }
+      let(:post_create_request) { post :create, format: :js, params: { question: question_params } }
+      let(:user)                { create(:user)                                                    }
 
       before { login(user) }
 
@@ -81,11 +75,12 @@ RSpec.describe QuestionsController, type: :controller do
           expect { post_create_request }.not_to change(Question, :count)
         end
 
-        it 're-renders new' do
+        it 'render create view' do
           post_create_request
 
-          expect(response).to render_template :new
+          expect(response).to render_template :create
         end
+
       end
     end
 
