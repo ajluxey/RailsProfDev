@@ -12,8 +12,16 @@ gem 'webpacker', '~> 5.0'
 gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.7'
 gem 'jquery-rails'
+
+# Active storage Amazon S3
 gem 'aws-sdk-s3', require: false
+
+# Nested Forms
 gem 'cocoon'
+
+# GitHub
+gem 'octokit', '~> 4.0'
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 
