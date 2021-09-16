@@ -40,7 +40,7 @@ class GistLinkService
 
   def file_to_html(name, attributes)
     file_html = "<h4>#{name}</h4>"
-    puts attributes[:content]
-    file_html += "<p>#{attributes[:content]}</p>"
+    file_html += "<p>#{attributes[:content].split("\n").join('<br>')}</p>"
+    # file_html += "<textarea>#{attributes[:content]}</textarea>"
   end
 end
