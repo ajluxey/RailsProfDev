@@ -3,8 +3,9 @@ feature 'User can add links to question', %q(
   As an question's author
   I'd like to be able to add links
 ) do
-  given(:user)     { create(:user)      }
-  given(:new_link) { build(:link, :new) }
+  given(:user)      { create(:user)       }
+  given(:new_link)  { build(:link, :new)  }
+  given(:gist_link) { build(:link, :gist) }
 
   background { login_as(user) }
 
@@ -30,11 +31,11 @@ feature 'User can add links to question', %q(
     end
 
     scenario 'with adding gist link' do
-      # fill_in 'URL', with: url
-      #
-      # click_on 'Create Question'
-      #
-      # expect(page).to have_content "puts 'test'"
+      fill_in 'URL', with: gist_link.url
+
+      click_on 'Create Question'
+
+      expect(page).to have_content "puts 'test'"
     end
 
     scenario 'with adding invalid link' do

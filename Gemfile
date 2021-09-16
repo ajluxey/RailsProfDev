@@ -13,7 +13,8 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.7'
 gem 'jquery-rails'
 
-# Active storage Amazon S3
+# Active storage
+gem 'active_storage_validations'
 gem 'aws-sdk-s3', require: false
 
 # Nested Forms

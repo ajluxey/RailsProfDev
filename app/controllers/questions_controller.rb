@@ -10,12 +10,11 @@ class QuestionsController < ApplicationController
 
   def show
     @answer = Answer.new
-    # @answer.links.build
   end
 
   def new
     @question = Question.new
-    # @question.links.build
+    @question.build_reward
   end
 
   def edit
@@ -50,7 +49,8 @@ class QuestionsController < ApplicationController
     params.require(:question).permit(:title, :body,
                                      files_blob_ids: [],
                                      files: [],
-                                     links_attributes: %i[id name url _destroy])
+                                     links_attributes: %i[id name url _destroy],
+                                     reward_attributes: %i[id name image])
   end
 
   def required_author!
