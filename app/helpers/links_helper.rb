@@ -19,7 +19,7 @@ module LinksHelper
 
   def link_to_gist(link)
     content_tag :div, class: 'gist' do
-      concat content_tag :h3, link.name
+      concat link_to link.name, link.url, target: '_blank'
       concat GistLinkService.get_html_gist_from(link).html_safe
     end
   end
