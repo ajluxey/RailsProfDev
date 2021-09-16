@@ -1,37 +1,46 @@
 class GistLinkService
-  attr_reader :gist, :client
   GIST_URL_REGEX = /gist\.github\.com/
   GIST_ACCESS_TOKEN = Rails.application.credentials.github_gists_token
 
-  GistFiles = Struct.new(:files) do
-    def success?
-      files.present?
-    end
+  def self.link_is_gist?(link)
+    link.url =~ GIST_URL_REGEX ? true : false
   end
 
-  def self.link_is_gist?(url)
-    url =~ GIST_URL_REGEX ? true : false
+  def self.get_html_gist_from(link)
+    gist_link = new(link.url)
+    gist_link.get_html
   end
 
   def initialize(url)
-    if self.class.link_is_gist?(url)
-      set_gist(url)
-      @client = Octokit::Client.new(access_token: GIST_ACCESS_TOKEN)
+    @gist = Octokit::Gist.from_url(url)
+    @gist.id = @gist.id.partition('/').last
+    @client = Octokit::Client.new(access_token: GIST_ACCESS_TOKEN)
+  end
+
+  def get_html
+    files = get_gist_files
+    gist_html = ''
+
+    if files.present?
+      files.each do |name, attributes|
+        gist_html += file_to_html(name, attributes)
+      end
+    else
+      gist_html = 'Something wrong with getting files'
     end
-  end
 
-  def get_gist_files
-    GistFiles.new(@client.gist(@gist.id).files)
-  end
-
-  def is_gist?
-    @gist.url =~ GIST_URL_REGEX ? true : false
+    gist_html
   end
 
   private
 
-  def set_gist(url)
-    @gist = Octokit::Gist.from_url(url)
-    @gist.id = @gist.id.partition('/').last
+  def get_gist_files
+    @client.gist(@gist.id).files
+  end
+
+  def file_to_html(name, attributes)
+    file_html = "<h4>#{name}</h4>"
+    puts attributes[:content]
+    file_html += "<p>#{attributes[:content]}</p>"
   end
 end
