@@ -1,0 +1,6 @@
+h3 Your rewards
+
+- if current_user&.rewards.present?
+  = render current_user.rewards
+- else
+  p You have not rewards

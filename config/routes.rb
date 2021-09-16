@@ -9,4 +9,5 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :rewards, only: :index
 end
