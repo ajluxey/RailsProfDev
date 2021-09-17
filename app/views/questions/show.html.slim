@@ -2,7 +2,13 @@
   = render 'question_in_show'
 
 -if user_signed_in?
-  h3= 'Create new answer'
+  h3 Create new answer
+
+  - if @question.reward.present?
+    i You can get reward for best answer on this question
+    h5= @question.reward.name
+    p= image_tag @question.reward.image
+
 
   = render 'answers/form_create'
 

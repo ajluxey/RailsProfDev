@@ -1,5 +1,7 @@
 class AnswersController < ApplicationController
   before_action :set_answer, only: %i[update update_best destroy]
+
+  before_action :authenticate_user!
   before_action :required_author!, only: %i[update destroy]
   before_action :required_question_author!, only: :update_best
 
@@ -22,6 +24,7 @@ class AnswersController < ApplicationController
 
   def update_best
     @previous_best = @answer.is_best!
+    AnswerRewardService.reward_for_this_answer(@answer)
     flash.now[:notice] = 'Best answer successfully highlighted'
   end
 
@@ -37,7 +40,10 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body, files_blob_ids: [], files: [])
+    params.require(:answer).permit(:body,
+                                   files_blob_ids: [],
+                                   files: [],
+                                   links_attributes: %i[id name url _destroy])
   end
 
   def required_author!

@@ -19,6 +19,9 @@
           = block.check_box
           = block.label
 
+  = render 'links/nested_form', form: form
+
+  = render 'rewards/nested_form', form: form
 
   p
     = form.submit

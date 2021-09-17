@@ -14,6 +14,7 @@ class QuestionsController < ApplicationController
 
   def new
     @question = Question.new
+    @question.build_reward
   end
 
   def edit
@@ -24,8 +25,6 @@ class QuestionsController < ApplicationController
 
     if @question.save
       redirect_to @question, notice: 'Your question successfully created'
-    else
-      render :new
     end
   end
 
@@ -47,7 +46,11 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, files_blob_ids: [], files: [])
+    params.require(:question).permit(:title, :body,
+                                     files_blob_ids: [],
+                                     files: [],
+                                     links_attributes: %i[id name url _destroy],
+                                     reward_attributes: %i[id name image])
   end
 
   def required_author!

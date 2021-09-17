@@ -6,6 +6,8 @@
     p= 'Author: ' + answer.author.email
     p= answer.body
 
+    = links_for(answer)
+
     - if answer.files.attached?
       - answer.files.each do |file|
         p= link_to file.filename.to_s, url_for(file), target: "_blank"

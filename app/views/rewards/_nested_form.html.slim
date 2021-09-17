@@ -1,0 +1,10 @@
+#reward
+  p Reward:
+  i You can add reward for best answer
+
+  = form.fields_for :reward do |reward|
+    p= reward.label :name
+    p= reward.text_field :name
+
+    p= reward.label :image
+    p= reward.file_field :image

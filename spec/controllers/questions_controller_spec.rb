@@ -22,6 +22,10 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:question)).to eq question
     end
 
+    it 'assigns new Answer to @answer' do
+      expect(assigns(:answer)).to be_a_new(Answer)
+    end
+
     it 'render show view' do
       expect(response).to render_template :show
     end
@@ -39,14 +43,18 @@ RSpec.describe QuestionsController, type: :controller do
         expect(assigns(:question)).to be_a_new(Question)
       end
 
+      it 'creates new Reward' do
+        expect(assigns(:question).reward).to be_a_new(Reward)
+      end
+
       it 'render new view' do
         expect(response).to render_template :new
       end
     end
 
     describe 'POST #create' do
-      let(:post_create_request) { post :create, params: { question: question_params } }
-      let(:user)                { create(:user)                                       }
+      let(:post_create_request) { post :create, format: :js, params: { question: question_params } }
+      let(:user)                { create(:user)                                                    }
 
       before { login(user) }
 
@@ -71,11 +79,12 @@ RSpec.describe QuestionsController, type: :controller do
           expect { post_create_request }.not_to change(Question, :count)
         end
 
-        it 're-renders new' do
+        it 'render create view' do
           post_create_request
 
-          expect(response).to render_template :new
+          expect(response).to render_template :create
         end
+
       end
     end
 
