@@ -16,7 +16,7 @@ feature 'User can add reward to question', %q(
   scenario 'User adds reward when creating question', js: true do
     within('#reward') do
       fill_in 'Name', with: 'Reward'
-      attach_file 'Image', "#{Rails.root}/tmp/test_images/congrats.jpg"
+      attach_file 'Image', "#{Rails.root}/spec/fixtures/images/congrats.jpg"
     end
 
     click_on 'Create Question'
@@ -26,7 +26,7 @@ feature 'User can add reward to question', %q(
 
   scenario 'User adds reward with errors when creating question', js: true do
     within('#reward') do
-      attach_file 'Image', "#{Rails.root}/tmp/test_images/congrats.jpg"
+      attach_file 'Image', "#{Rails.root}/spec/fixtures/images/congrats.jpg"
     end
 
     click_on 'Create Question'

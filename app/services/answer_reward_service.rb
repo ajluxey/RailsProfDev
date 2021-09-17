@@ -20,6 +20,6 @@ class AnswerRewardService
   end
 
   def reward_author!
-    @reward.update(respondent: @answer.author)
+    @reward.update!(respondent: @answer.author)
   end
 end

@@ -3,6 +3,6 @@ FactoryBot.define do
     name       { "MyString" }
     respondent { nil        }
     question
-    image { Rack::Test::UploadedFile.new("#{Rails.root}/tmp/test_images/congrats.jpg", 'image/jpg') }
+    image { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/images/congrats.jpg", 'image/jpg') }
   end
 end

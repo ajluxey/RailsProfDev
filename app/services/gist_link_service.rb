@@ -3,7 +3,7 @@ class GistLinkService
   GIST_ACCESS_TOKEN = Rails.application.credentials.github_gists_token
 
   def self.link_is_gist?(link)
-    link.url =~ GIST_URL_REGEX ? true : false
+    link.url.match? GIST_URL_REGEX
   end
 
   def self.get_html_gist_from(link)
@@ -19,17 +19,8 @@ class GistLinkService
 
   def get_html
     files = get_gist_files
-    gist_html = ''
-
-    if files.present?
-      files.each do |name, attributes|
-        gist_html += file_to_html(name, attributes)
-      end
-    else
-      gist_html = 'Something wrong with getting files'
-    end
-
-    gist_html
+    gist_html = files&.map{ |name, attributes| file_to_html(name, attributes) }.join
+    gist_html ||= 'Something wrong with getting files'
   end
 
   private
@@ -41,6 +32,5 @@ class GistLinkService
   def file_to_html(name, attributes)
     file_html = "<h4>#{name}</h4>"
     file_html += "<p>#{attributes[:content].split("\n").join('<br>')}</p>"
-    # file_html += "<textarea>#{attributes[:content]}</textarea>"
   end
 end
