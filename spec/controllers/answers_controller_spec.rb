@@ -116,8 +116,6 @@ RSpec.describe AnswersController, type: :controller do
     let(:answer)   { create(:answer, question: question) }
     let(:patch_update_best_request) { patch :update_best, format: :js, params: { id: answer } }
 
-    # before { patch_update_best_request }
-
     it 'assigns requested answer to @answer' do
       patch_update_best_request
 
@@ -166,6 +164,62 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirect to question show' do
         expect(response).to redirect_to question_path(answer.question)
+      end
+    end
+  end
+
+  describe 'PATCH #rate' do
+    let(:patch_rate_request) { patch :rate, format: :json, params: { id: answer } }
+    let(:answer) { create(:answer) }
+
+    context 'update request from author' do
+      let(:answer) { create(:answer, author: user) }
+
+      it 'does not update answer' do
+        expect { patch_rate_request }.not_to change(answer, :rating)
+      end
+    end
+
+    it 'updates answer rating' do
+      expect { patch_rate_request }.to change(answer, :rating).by(1)
+    end
+
+    context 'when user has already rates' do
+      before do
+        user.rates(answer)
+        answer.reload
+      end
+
+      it 'does not update answer rating' do
+        expect { patch_rate_request }.not_to change(answer, :rating)
+      end
+    end
+  end
+
+  describe 'PATCH #rate_against' do
+    let(:patch_rate_against_request) { patch :rate_against, format: :json, params: { id: answer } }
+    let(:answer) { create(:answer) }
+
+    context 'update request from author' do
+      let(:answer) { create(:answer, author: user) }
+
+      it 'does not update answer' do
+        expect { patch_rate_against_request }.not_to change(answer, :rating)
+      end
+    end
+
+    it 'updates answer rating' do
+      expect { patch_rate_against_request }.to change(answer, :rating).by(-1)
+    end
+
+    context 'when user has already rates against' do
+      before do
+        user.rates_against(answer)
+        answer.reload
+      end
+
+      it 'does not update answer rating' do
+        expect { patch_rate_against_request }.not_to change(answer, :rating)
       end
     end
   end

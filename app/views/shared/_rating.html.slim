@@ -1,0 +1,21 @@
+= content_tag :div, class: 'rating' do
+  p
+    = "Rating: #{content_tag(:span, rateable_resource.rating, class: 'rating-counter')}".html_safe
+
+  - if user_signed_in? && current_user.can_change_rating?(rateable_resource)
+    - update_class = 'update-rating'
+    - cancel_class = "cancel update-rating"
+
+    - if rateable_resource.rated_by?(current_user)
+      - update_class += ' hidden'
+    - else
+      - cancel_class += ' hidden'
+
+    p= button_to('Cancel rating', polymorphic_path(rateable_resource, action: 'cancel_rating'), method: :delete, remote: true,
+            data: { type: :json }, form_class: cancel_class)
+
+    p
+      = button_to('-', polymorphic_path(rateable_resource, action: 'rate_against'), method: :patch, remote: true,
+              data: { type: :json }, form_class: "like #{update_class}")
+      = button_to( '+', polymorphic_path(rateable_resource, action: 'rate'), method: :patch, remote: true,
+              data: { type: :json }, form_class: "dislike #{update_class}")

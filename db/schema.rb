@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_16_094344) do
+ActiveRecord::Schema.define(version: 2021_09_17_141321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,6 +83,18 @@ ActiveRecord::Schema.define(version: 2021_09_16_094344) do
     t.index ["respondent_id"], name: "index_rewards_on_respondent_id"
   end
 
+  create_table "user_ratings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.boolean "mark", null: false
+    t.string "rateable_type"
+    t.bigint "rateable_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["rateable_type", "rateable_id"], name: "index_user_ratings_on_rateable"
+    t.index ["user_id", "rateable_id", "rateable_type"], name: "index_user_ratings_on_user_id_and_rateable_id_and_rateable_type", unique: true
+    t.index ["user_id"], name: "index_user_ratings_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -102,4 +114,5 @@ ActiveRecord::Schema.define(version: 2021_09_16_094344) do
   add_foreign_key "questions", "users", column: "author_id"
   add_foreign_key "rewards", "questions"
   add_foreign_key "rewards", "users", column: "respondent_id"
+  add_foreign_key "user_ratings", "users"
 end

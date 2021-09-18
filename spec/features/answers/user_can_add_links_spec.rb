@@ -67,7 +67,7 @@ feature 'User can add links to answer', %q(
 
         click_on 'Update'
 
-        expect(page).to have_link new_link.name, href: new_link.url
+        expect(page).to have_link new_link.name, href: new_link.url # Почему-то ссылка вставляется как https:github.com, без двух слешей
       end
 
       scenario 'with invalid params' do

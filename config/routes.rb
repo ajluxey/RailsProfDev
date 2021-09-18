@@ -5,7 +5,12 @@ Rails.application.routes.draw do
 
   resources :questions do
     resources :answers, only: %i[create update destroy], shallow: true do
-      patch :update_best, on: :member
+      member do
+        patch  :update_best
+        patch  :rate
+        patch  :rate_against
+        delete :cancel_rating
+      end
     end
   end
 
