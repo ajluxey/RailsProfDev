@@ -1,16 +1,15 @@
-feature 'User can rate answer', %q(
-  In order to show helpfull/useless of answer
+feature 'User can rate question', %q(
+  In order to show helpfull/useless of question
   As an authenticated user
-  I'd like to be able to rate answer
+  I'd like to be able to rate question
 ) do
-  given!(:question) { create(:question)                   }
-  given!(:answer)   { create(:answer, question: question) }
-  given(:user)      { create(:user)                       }
+  given!(:question) { create(:question) }
+  given(:user)      { create(:user)     }
 
-  scenario 'Unatuhenticated user tries to rate answer' do
+  scenario 'Unatuhenticated user tries to rate question' do
     visit question_path(question)
 
-    within('.answers') do
+    within('.question') do
       expect(page).not_to have_content('+')
       expect(page).not_to have_content('-')
     end
@@ -22,19 +21,19 @@ feature 'User can rate answer', %q(
       visit question_path(question)
     end
 
-    describe 'author of answer' do
-      given(:answer) { create(:answer, author: user, question: question) }
+    describe 'author of question' do
+      given(:question) { create(:question, author: user) }
 
-      scenario 'tries to rate his answer' do
-        within('.answers') do
+      scenario 'tries to rate his question' do
+        within('.question') do
           expect(page).not_to have_content('+')
           expect(page).not_to have_content('-')
         end
       end
     end
 
-    scenario 'tries to rate answer' do
-      within('.answers') do
+    scenario 'tries to rate question' do
+      within('.question') do
         expect(page).to have_content '0'
 
         click_on '+'
@@ -43,15 +42,15 @@ feature 'User can rate answer', %q(
       end
     end
 
-    describe 'already rates answer' do
+    describe 'already rates this question' do
       background do
-        within('.answers') do
+        within('.question') do
           click_on '+'
         end
       end
 
       scenario 'tries to rate again' do
-        within('.answers') do
+        within('.question') do
           expect(page).to have_content '1'
           expect(page).not_to have_content '+'
           expect(page).not_to have_content '-'
@@ -59,7 +58,7 @@ feature 'User can rate answer', %q(
       end
 
       scenario 'tries to cancel his rate' do
-        within('.answers') do
+        within('.question') do
           expect(page).to have_content '1'
 
           click_on 'Cancel rating'
@@ -69,7 +68,7 @@ feature 'User can rate answer', %q(
       end
 
       scenario 'tries to rerate by another value' do
-        within('.answers') do
+        within('.question') do
           expect(page).to have_content '1'
 
           click_on 'Cancel rating'

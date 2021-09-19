@@ -7,6 +7,8 @@ p= @question.body
 
 = links_for(@question)
 
+= render 'shared/rating', rateable_resource: @question
+
 - if user_signed_in? && current_user.author?(@question)
   = link_to('Edit', '#', class: 'edit-question-link') + ' '
   = link_to('Delete question', question_path(@question), method: :delete, remote: true)

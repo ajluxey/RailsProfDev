@@ -173,6 +173,75 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
+    describe 'PATCH #rate' do
+      let(:patch_rate_request) { patch :rate, format: :json, params: { id: question } }
+      let(:question) { create(:question) }
+
+      context 'update request from author' do
+        let(:question) { create(:question, author: user) }
+
+        it 'does not update question' do
+          expect { patch_rate_request }.not_to change(question, :rating)
+        end
+      end
+
+      it 'updates question rating' do
+        expect { patch_rate_request }.to change(question, :rating).by(1)
+      end
+
+      context 'when user has already rates' do
+        before do
+          user.rates(question)
+          question.reload
+        end
+
+        it 'does not update question rating' do
+          expect { patch_rate_request }.not_to change(question, :rating)
+        end
+      end
+    end
+
+    describe 'PATCH #rate_against' do
+      let(:patch_rate_against_request) { patch :rate_against, format: :json, params: { id: question } }
+      let(:question) { create(:question) }
+
+      context 'update request from author' do
+        let(:question) { create(:question, author: user) }
+
+        it 'does not update question' do
+          expect { patch_rate_against_request }.not_to change(question, :rating)
+        end
+      end
+
+      it 'updates question rating' do
+        expect { patch_rate_against_request }.to change(question, :rating).by(-1)
+      end
+
+
+      it 'does not update question rating when user has already rates against' do
+        user.rates_against(question)
+        question.reload
+
+        expect { patch_rate_against_request }.not_to change(question, :rating)
+      end
+    end
+
+    describe 'PATCH #cancel_rate' do
+      let(:patch_cancel_rating_request) { patch :cancel_rating, format: :json, params: { id: question } }
+      let(:question) { create(:question) }
+
+      it 'does not update question rating that has not been rated' do
+        expect { patch_cancel_rating_request }.not_to change(question, :rating)
+      end
+
+      it 'updates question rating when user has already rates' do
+        user.rates(question)
+        question.reload
+
+        expect { patch_cancel_rating_request }.to change(question, :rating).by(-1)
+      end
+    end
+
     describe 'POST #delete' do
       let(:post_delete_request) { delete :destroy, format: :js, params: { id: question } }
       let!(:question) { create(:question) }
