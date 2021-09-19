@@ -189,15 +189,11 @@ RSpec.describe QuestionsController, type: :controller do
         expect { patch_rate_request }.to change(question, :rating).by(1)
       end
 
-      context 'when user has already rates' do
-        before do
-          user.rates(question)
-          question.reload
-        end
+      it 'does not update question rating when user has already rates' do
+        user.rates(question)
+        question.reload
 
-        it 'does not update question rating' do
-          expect { patch_rate_request }.not_to change(question, :rating)
-        end
+        expect { patch_rate_request }.not_to change(question, :rating)
       end
     end
 

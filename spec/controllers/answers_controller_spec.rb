@@ -184,15 +184,11 @@ RSpec.describe AnswersController, type: :controller do
       expect { patch_rate_request }.to change(answer, :rating).by(1)
     end
 
-    context 'when user has already rates' do
-      before do
-        user.rates(answer)
-        answer.reload
-      end
+    it 'does not update answer rating when user has already rates' do
+      user.rates(answer)
+      answer.reload
 
-      it 'does not update answer rating' do
-        expect { patch_rate_request }.not_to change(answer, :rating)
-      end
+      expect { patch_rate_request }.not_to change(answer, :rating)
     end
   end
 
@@ -212,15 +208,27 @@ RSpec.describe AnswersController, type: :controller do
       expect { patch_rate_against_request }.to change(answer, :rating).by(-1)
     end
 
-    context 'when user has already rates against' do
-      before do
-        user.rates_against(answer)
-        answer.reload
-      end
+    it 'does not update answer rating when user has already rates against' do
+      user.rates_against(answer)
+      answer.reload
 
-      it 'does not update answer rating' do
-        expect { patch_rate_against_request }.not_to change(answer, :rating)
-      end
+      expect { patch_rate_against_request }.not_to change(answer, :rating)
+    end
+  end
+
+  describe 'PATCH #cancel_rate' do
+    let(:patch_cancel_rating_request) { patch :cancel_rating, format: :json, params: { id: answer } }
+    let(:answer) { create(:answer) }
+
+    it 'does not update answer rating that has not been rated' do
+      expect { patch_cancel_rating_request }.not_to change(answer, :rating)
+    end
+
+    it 'updates answer rating when user has already rates' do
+      user.rates(answer)
+      answer.reload
+
+      expect { patch_cancel_rating_request }.to change(answer, :rating).by(-1)
     end
   end
 
