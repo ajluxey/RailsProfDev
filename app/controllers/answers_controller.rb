@@ -1,5 +1,5 @@
 class AnswersController < ApplicationController
-  before_action :set_answer, only: %i[update update_best update_rating cancel_rating destroy]
+  before_action :set_answer, only: %i[update update_best destroy]
 
   before_action :authenticate_user!
   before_action :required_author!, only: %i[update destroy]
