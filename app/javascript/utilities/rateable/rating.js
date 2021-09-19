@@ -11,7 +11,6 @@ export default class Rating {
   setButtons () {
     if (this.div.querySelectorAll('.update-rating').length == 0) return
 
-
     this.likeButton = new RateButton(this.div.querySelector('form.like.update-rating'))
     this.dislikeButton = new RateButton(this.div.querySelector('form.dislike.update-rating'))
     this.cancelButton = new RateButton(this.div.querySelector('form.cancel.update-rating'))
@@ -27,7 +26,6 @@ export default class Rating {
   }
 
   ajaxSuccessHandler (event) {
-    console.log(this)
     const response = event.detail[0]
     this.ratingCounter.innerHTML = response.rating
     this.toggleVisibleOfButtons()

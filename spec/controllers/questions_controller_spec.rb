@@ -190,7 +190,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'does not update question rating when user has already rates' do
-        user.rates(question)
+        RegisterRatingService.from(user).for(question).register_rate
         question.reload
 
         expect { patch_rate_request }.not_to change(question, :rating)
@@ -215,7 +215,7 @@ RSpec.describe QuestionsController, type: :controller do
 
 
       it 'does not update question rating when user has already rates against' do
-        user.rates_against(question)
+        RegisterRatingService.from(user).for(question).register_rate_against
         question.reload
 
         expect { patch_rate_against_request }.not_to change(question, :rating)
@@ -231,7 +231,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'updates question rating when user has already rates' do
-        user.rates(question)
+        RegisterRatingService.from(user).for(question).register_rate
         question.reload
 
         expect { patch_cancel_rating_request }.to change(question, :rating).by(-1)

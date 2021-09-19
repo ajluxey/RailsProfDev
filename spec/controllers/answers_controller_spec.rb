@@ -185,7 +185,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     it 'does not update answer rating when user has already rates' do
-      user.rates(answer)
+      RegisterRatingService.from(user).for(answer).register_rate
       answer.reload
 
       expect { patch_rate_request }.not_to change(answer, :rating)
@@ -209,7 +209,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     it 'does not update answer rating when user has already rates against' do
-      user.rates_against(answer)
+      RegisterRatingService.from(user).for(answer).register_rate_against
       answer.reload
 
       expect { patch_rate_against_request }.not_to change(answer, :rating)
@@ -225,7 +225,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     it 'updates answer rating when user has already rates' do
-      user.rates(answer)
+      RegisterRatingService.from(user).for(answer).register_rate
       answer.reload
 
       expect { patch_cancel_rating_request }.to change(answer, :rating).by(-1)

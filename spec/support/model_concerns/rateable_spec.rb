@@ -7,7 +7,7 @@ shared_examples_for "rateable" do
 
   describe '#rating' do
     it 'returns results rating' do
-      user.rates(rateable)
+      RegisterRatingService.from(user).for(rateable).register_rate
       rateable.reload
 
       likes = rateable.user_marks.where(mark: true).count
@@ -19,7 +19,7 @@ shared_examples_for "rateable" do
 
   describe '#rated_by?' do
     it 'user already rates rateable' do
-      user.rates(rateable)
+      RegisterRatingService.from(user).for(rateable).register_rate
       rateable.reload
 
       expect(rateable).to be_rated_by(user)

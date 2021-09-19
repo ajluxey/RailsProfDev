@@ -6,38 +6,25 @@ module Rated
   end
 
   def rate
-    unless current_user.ratings.for(@rateable).present?
-      status = current_user.rates(@rateable)
-    end
-
-    rating_response(status, @rateable)
+    RegisterRatingService.from(current_user).for(@rateable).register_rate
+    rating_response(@rateable)
   end
 
   def rate_against
-    unless current_user.ratings.for(@rateable).present?
-      status = current_user.rates_against(@rateable)
-    end
-
-    rating_response(status, @rateable)
+    RegisterRatingService.from(current_user).for(@rateable).register_rate_against
+    rating_response(@rateable)
   end
 
   def cancel_rating
-    if current_user.ratings.for(@rateable).present?
-      status = current_user.cancel_rating_for(@rateable)
-    end
-
-    rating_response(status, @rateable)
+    RegisterRatingService.from(current_user).for(@rateable).cancel_rate
+    rating_response(@rateable)
   end
 
   private
 
-  def rating_response(status, rateable)
+  def rating_response(rateable)
     respond_to do |format|
-      if status == true
-        format.json { render json: { rating: rateable.rating }.merge(rateable.data_attribute_id), status: :ok }
-      else
-        format.json { render json: {}, status: :bad_request }
-      end
+      format.json { render json: { rating: rateable.rating }, status: :ok }
     end
   end
 
