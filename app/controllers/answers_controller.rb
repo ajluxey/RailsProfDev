@@ -5,6 +5,8 @@ class AnswersController < ApplicationController
   before_action :required_author!, only: %i[update destroy]
   before_action :required_question_author!, only: :update_best
 
+  include Rated
+
   def create
     @question = Question.find(params[:question_id])
 
