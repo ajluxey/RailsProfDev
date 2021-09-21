@@ -7,6 +7,7 @@ class AnswersController < ApplicationController
   after_action :published, only: :create
 
   include Rated
+  include Commented
 
   def create
     @question = Question.find(params[:question_id])

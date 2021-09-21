@@ -25,3 +25,5 @@
         = link_to('Delete answer', answer_path(answer), method: :delete, remote: true)
 
         = render 'answers/form_update', answer: answer
+
+    = render "comments/comments", commentable_resource: answer

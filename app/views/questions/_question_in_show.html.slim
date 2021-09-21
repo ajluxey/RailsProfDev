@@ -16,3 +16,5 @@ p= @question.body
   = content_tag(:div, '', class: 'question-update-errors')
 
   = render 'form', html_attributes: { class: 'update-question', style: 'display: none;' }
+
+= render 'comments/comments', commentable_resource: @question

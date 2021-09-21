@@ -1,0 +1,5 @@
+= form_with model: Comment.new, url: polymorphic_path(commentable_resource, action: 'new_comment') do |form|
+  p= form.label :body, 'New comment'
+  p= form.text_field :body
+
+  p= form.submit
