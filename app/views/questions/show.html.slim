@@ -12,5 +12,6 @@
 
   = render 'answers/form_create'
 
-.answers
+/ .answers
+= content_tag :div, class: 'answers', data: { question_id: @question.id }
   = render @question.answers
