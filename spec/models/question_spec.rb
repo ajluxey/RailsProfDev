@@ -1,5 +1,6 @@
 RSpec.describe Question, type: :model do
   it_behaves_like "rateable"
+  it_behaves_like "commentable"
 
   it { should belong_to :author                          }
   it { should have_many(:answers).dependent(:destroy)    }
