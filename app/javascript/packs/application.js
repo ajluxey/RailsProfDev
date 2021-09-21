@@ -11,6 +11,7 @@ import "jquery"
 import "@nathanvda/cocoon"
 
 import "utilities"
+import "templates"
 
 Rails.start()
 Turbolinks.start()

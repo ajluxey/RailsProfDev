@@ -1,6 +1,7 @@
 .comments
   h5 Comments:
-  = render commentable_resource.comments
+  .comments-list
+    = render commentable_resource.comments
 
   - if user_signed_in?
     = render 'comments/form', commentable_resource: commentable_resource

@@ -1,2 +1,2 @@
 const templates = require.context('.', true)
-templates.keys().forEach(utilities)
+templates.keys().forEach(templates)

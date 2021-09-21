@@ -15,8 +15,7 @@ document.addEventListener('turbolinks:load', () => {
 
       received(data) {
         let commentableDOM = this.findCommentable(data.for)
-        commentableDOM.querySelector('.comments')
-        commentableDOM.html()
+        commentableDOM.querySelector('.comments-list').insertAdjacentHTML('beforeend', data.comment)
       },
 
       findCommentable(data) {

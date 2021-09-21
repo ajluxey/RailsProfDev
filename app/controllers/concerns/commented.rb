@@ -6,11 +6,15 @@ module Commented
     before_action :set_commentable, only: :new_comment
   end
 
+  # TODO clear comment form
   def new_comment
     comment = UserCommentsService.from(current_user).for(@commentable).new_comment(comment_params)
     ActionCable.server.broadcast(
       'comments_channel',
-      comment: comment.as_json,
+      comment: ApplicationController.render(
+        partial: 'comments/comment',
+        locals: { comment: comment }
+      ),
       for: { type: @commentable.model_name.to_s.underscore,
              id: @commentable.id }
     )
