@@ -5,6 +5,7 @@ class QuestionsController < ApplicationController
   before_action :required_author!, only: %i[edit update destroy]
 
   include Rated
+  include Commented
 
   def index
     @questions = Question.all

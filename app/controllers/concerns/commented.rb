@@ -7,9 +7,13 @@ module Commented
   end
 
   def new_comment
-    UserCommentsService.from(current_user).for(@commentable).new_comment(comment_params)
-    # CommentsChannel.broadcast_to
-    # подумать - "#{model_klass.pluralize}Channel"
+    comment = UserCommentsService.from(current_user).for(@commentable).new_comment(comment_params)
+    ActionCable.server.broadcast(
+      'comments_channel',
+      comment: comment.as_json,
+      for: { type: @commentable.model_name.to_s.underscore,
+             id: @commentable.id }
+    )
   end
 
   private
