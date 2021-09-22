@@ -63,7 +63,12 @@ class AnswersController < ApplicationController
 
     AnswersChannel.broadcast_to(
       @answer.question,
-      answer: @answer.as_json
+      ApplicationController.render(
+        partial: 'answers/answer',
+        locals: { answer: @answer,
+                  current_user: current_user,
+                  user_signed_in?: user_signed_in? }
+      )
     )
   end
 end

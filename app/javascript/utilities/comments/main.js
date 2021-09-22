@@ -1,9 +1,17 @@
 import consumer from "../../channels/consumer";
+import CommentForm from "./comment_form";
 
 
 document.addEventListener('turbolinks:load', () => {
-  const questionDOM = document.querySelector('div.question')
-  if (questionDOM) {
+  var commentsDOM = document.querySelectorAll('.comments')
+  if (commentsDOM) {
+    commentsDOM.forEach((commentDOM) => {
+      var commentForm = commentDOM.querySelector('form')
+      if (commentForm){
+        new CommentForm(commentForm)
+      }
+    })
+
     consumer.subscriptions.create("CommentsChannel", {
       connected() {
         console.log('Connected to Comments channel')
@@ -19,7 +27,7 @@ document.addEventListener('turbolinks:load', () => {
       },
 
       findCommentable(data) {
-        const dataAttribute = '[data-' + data.type.replace('_', '-') + '-id]'
+        const dataAttribute = `[data-${data.type.replace('_', '-')}-id="${data.id}"]`
         const commentableDOM = document.querySelector(dataAttribute)
 
         return commentableDOM

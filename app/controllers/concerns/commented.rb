@@ -8,16 +8,15 @@ module Commented
 
   # TODO clear comment form
   def new_comment
-    comment = UserCommentsService.from(current_user).for(@commentable).new_comment(comment_params)
-    ActionCable.server.broadcast(
-      'comments_channel',
-      comment: ApplicationController.render(
-        partial: 'comments/comment',
-        locals: { comment: comment }
-      ),
-      for: { type: @commentable.model_name.to_s.underscore,
-             id: @commentable.id }
-    )
+    comment_service = UserCommentsService.from(current_user).for(@commentable)
+    comment = comment_service.new_comment(comment_params)
+    if comment.errors.any?
+      respond_to do |format|
+        format.json { render json: { errors: comment.errors.full_messages } }
+      end
+    else
+      comment_service.publish(comment)
+    end
   end
 
   private
