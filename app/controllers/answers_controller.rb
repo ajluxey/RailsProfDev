@@ -4,7 +4,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :required_author!, only: %i[update destroy]
   before_action :required_question_author!, only: :update_best
-  after_action :published, only: :create
+  after_action  :published, only: :create
 
   include Rated
   include Commented

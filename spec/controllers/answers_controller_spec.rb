@@ -232,11 +232,6 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
-  # describe 'POST #new_comment' do
-  #   let(:post_new_comment_request) { post :new_comment, format: json, params: new_comment_params }
-  #   let(:new_comment_params)       { { id: answer.id, comment: { body: 'NewString' } } }
-  # end
-
   describe 'POST #delete' do
     let(:post_delete_request) { post :destroy, format: :js, params: { id: answer } }
 

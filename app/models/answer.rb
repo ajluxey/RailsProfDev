@@ -33,25 +33,6 @@ class Answer < ApplicationRecord
     update!(best: false)
   end
 
-  def related_resource_as_json
-    related_resource = {}
-    if files.present?
-      related_resource['files'] = []
-
-      files.each do |file|
-        related_resource['files'] << { file.filename.to_s => url_for(file) }
-      end
-    end
-
-    if links.present?
-      related_resource['links'] = []
-
-      links.each do |link|
-        related_resource['links'] << { link.name => link.url }
-      end
-    end
-  end
-
   private
 
   def validation_one_best_answer
