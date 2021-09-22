@@ -61,14 +61,14 @@ class AnswersController < ApplicationController
   def published
     return if @answer.errors.any?
 
-    AnswersChannel.broadcast_to(
-      @answer.question,
-      ApplicationController.render(
-        partial: 'answers/answer',
-        locals: { answer: @answer,
-                  current_user: current_user,
-                  user_signed_in?: user_signed_in? }
-      )
-    )
+    # AnswersChannel.broadcast_to(
+    #   @answer.question,
+    #   ApplicationController.render(
+    #     partial: 'answers/answer',
+    #     locals: { answer: @answer,
+    #               current_user: current_user,
+    #               user_signed_in?: user_signed_in? }
+    #   )
+    # )
   end
 end

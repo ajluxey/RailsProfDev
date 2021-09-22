@@ -1,10 +1,10 @@
 p= link_to 'Create new question', new_question_path
 
-table
+table.questions
   thead
     th 'Author'
     th 'Title'
     th 'Actions'
 
-  tbody
+  tbody.questions-list
     = render @questions

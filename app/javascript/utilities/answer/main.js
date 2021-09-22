@@ -12,11 +12,9 @@ document.addEventListener('turbolinks:load', () => {
       question_id: answersDOM.dataset.questionId
     }, {
       connected() {
-        console.log("Connected to AnswerChannel question " + answersDOM.dataset.questionId )
       },
 
       disconnected() {
-        console.log("Disconnected from AnswerChannel question " + answersDOM.dataset.questionId )
       },
 
       received(data) {

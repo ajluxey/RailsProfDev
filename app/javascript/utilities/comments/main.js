@@ -14,11 +14,9 @@ document.addEventListener('turbolinks:load', () => {
 
     consumer.subscriptions.create("CommentsChannel", {
       connected() {
-        console.log('Connected to Comments channel')
       },
 
       disconnected() {
-        console.log('Disconnected from Comments channel')
       },
 
       received(data) {

@@ -2,11 +2,9 @@ module Commented
   extend ActiveSupport::Concern
 
   included do
-    before_action :authenticate_user!, only: :new_comment
     before_action :set_commentable, only: :new_comment
   end
 
-  # TODO clear comment form
   def new_comment
     comment_service = UserCommentsService.from(current_user).for(@commentable)
     comment = comment_service.new_comment(comment_params)
