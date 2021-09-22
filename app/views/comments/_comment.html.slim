@@ -1,0 +1,5 @@
+= content_tag :div, class: 'comment', data: { comment_id: comment.id } do
+  p
+    i= "User: #{comment.author.email}"
+  p
+    i= comment.body

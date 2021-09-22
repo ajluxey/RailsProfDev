@@ -4,8 +4,10 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :required_author!, only: %i[update destroy]
   before_action :required_question_author!, only: :update_best
+  after_action  :published, only: :create
 
   include Rated
+  include Commented
 
   def create
     @question = Question.find(params[:question_id])
@@ -54,5 +56,14 @@ class AnswersController < ApplicationController
 
   def required_question_author!
     redirect_to question_path(@answer.question), alert: 'You must be author of question' unless current_user.author?(@answer.question)
+  end
+
+  def published
+    return if @answer.errors.any?
+
+    AnswersChannel.broadcast_to(
+      @answer.question,
+      answer: @answer.as_json
+    )
   end
 end

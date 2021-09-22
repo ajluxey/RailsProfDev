@@ -1,4 +1,4 @@
-.question
+= content_tag :div, class: 'question', data: { question_id: @question.id } do
   = render 'question_in_show'
 
 -if user_signed_in?
@@ -12,5 +12,5 @@
 
   = render 'answers/form_create'
 
-.answers
+= content_tag :div, class: 'answers', data: { question_id: @question.id }
   = render @question.answers

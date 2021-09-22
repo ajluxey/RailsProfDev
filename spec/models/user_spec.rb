@@ -1,8 +1,9 @@
 RSpec.describe User, type: :model do
-  it { should have_many(:questions).dependent(:destroy) }
-  it { should have_many(:answers).dependent(:destroy)   }
-  it { should have_many(:rewards).dependent(:nullify)   }
-  it { should have_many(:ratings).dependent(:destroy)   }
+  it { should have_many(:questions).dependent(:destroy)  }
+  it { should have_many(:answers).dependent(:destroy)    }
+  it { should have_many(:rewards).dependent(:nullify)    }
+  it { should have_many(:ratings).dependent(:destroy)    }
+  it { should have_many(:comments).dependent(:destroy)   }
 
   describe '#author?' do
     let(:user) { create(:user) }

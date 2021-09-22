@@ -3,8 +3,10 @@ class QuestionsController < ApplicationController
 
   before_action :set_question, only: %i[show edit update destroy]
   before_action :required_author!, only: %i[edit update destroy]
+  after_action  :published, only: :create
 
   include Rated
+  include Commented
 
   def index
     @questions = Question.all
@@ -57,5 +59,17 @@ class QuestionsController < ApplicationController
 
   def required_author!
     redirect_to question_path(@question), alert: 'You must be author' unless current_user.author?(@question)
+  end
+
+  def published
+    return if @question.errors.any?
+
+    ActionCable.server.broadcast(
+      "questions_channel",
+      ApplicationController.render(
+        partial: 'questions/question',
+        locals: { question: @question }
+      )
+    )
   end
 end

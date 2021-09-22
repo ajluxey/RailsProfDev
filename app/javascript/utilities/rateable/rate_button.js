@@ -1,6 +1,5 @@
 export default class RateButton {
   constructor(formDOM) {
-    console.log(formDOM)
     this.formDOM = formDOM
     this.button = this.findButton()
   }

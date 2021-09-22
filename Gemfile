@@ -12,6 +12,7 @@ gem 'webpacker', '~> 5.0'
 gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.7'
 gem 'jquery-rails'
+gem 'gon'
 
 # Active storage
 gem 'active_storage_validations'
