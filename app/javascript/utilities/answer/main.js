@@ -1,5 +1,6 @@
 import AnswersList from "./answers_list";
 import consumer from "../../channels/consumer";
+import Answer from "./answer";
 
 document.addEventListener('turbolinks:load', () => {
   const answersDOM = document.querySelector('div.answers')
