@@ -8,6 +8,8 @@ class QuestionsController < ApplicationController
   include Rated
   include Commented
 
+  authorize_resource
+
   def index
     @questions = Question.all
   end
@@ -19,9 +21,6 @@ class QuestionsController < ApplicationController
   def new
     @question = Question.new
     @question.build_reward
-  end
-
-  def edit
   end
 
   def create

@@ -84,27 +84,6 @@ RSpec.describe QuestionsController, type: :controller do
 
           expect(response).to render_template :create
         end
-
-      end
-    end
-
-    describe 'GET #edit' do
-      before { get :edit, params: { id: question } }
-
-      context 'request from author' do
-        let(:question) { create(:question, author: user) }
-
-        it 'assigns requested question to @question' do
-          expect(assigns(:question)).to eq question
-        end
-
-        it 'render edit view' do
-          expect(response).to render_template :edit
-        end
-      end
-
-      context 'request from not author' do
-        it { expect(response).to redirect_to question_path(question) }
       end
     end
 
@@ -113,6 +92,7 @@ RSpec.describe QuestionsController, type: :controller do
       let(:question_params) { attributes_for(:question, :updated) }
 
       before do |test|
+        from question_path(question)
         patch_update_request unless test.metadata[:update_with_files]
       end
 
@@ -169,7 +149,9 @@ RSpec.describe QuestionsController, type: :controller do
           expect(question).to have_attributes(attributes_for(:question))
         end
 
-        it { expect(response).to redirect_to question_path(question) }
+        it 'redirect back' do
+          expect(response).to redirect_to question_path(question)
+        end
       end
     end
 
@@ -267,7 +249,8 @@ RSpec.describe QuestionsController, type: :controller do
           expect { post_delete_request }.not_to change(Question, :count)
         end
 
-        it 'redirect to questions' do
+        it 'redirect back' do
+          from question_path(question)
           post_delete_request
 
           expect(response).to redirect_to question_path(question)

@@ -2,12 +2,14 @@ class AnswersController < ApplicationController
   before_action :set_answer, only: %i[update update_best destroy]
 
   before_action :authenticate_user!
-  before_action :required_author!, only: %i[update destroy]
-  before_action :required_question_author!, only: :update_best
+  # before_action :required_author!, only: %i[update destroy]
+  # before_action :required_question_author!, only: :update_best
   after_action  :published, only: :create
 
   include Rated
   include Commented
+
+  authorize_resource
 
   def create
     @question = Question.find(params[:question_id])
