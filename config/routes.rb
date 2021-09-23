@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :questions, concerns: :rateable do
+  resources :questions, except: :edit, concerns: :rateable do
     post :new_comment, on: :member
 
     resources :answers, only: %i[create update destroy], concerns: :rateable, shallow: true do

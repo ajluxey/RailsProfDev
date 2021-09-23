@@ -6,16 +6,22 @@ module Rated
   end
 
   def rate
+    authorize! :rates, @rateable
+
     RegisterRatingService.from(current_user).for(@rateable).register_rate
     rating_response(@rateable)
   end
 
   def rate_against
+    authorize! :rates, @rateable
+
     RegisterRatingService.from(current_user).for(@rateable).register_rate_against
     rating_response(@rateable)
   end
 
   def cancel_rating
+    authorize! :cancel_rating, @rateable
+
     RegisterRatingService.from(current_user).for(@rateable).cancel_rate
     rating_response(@rateable)
   end

@@ -23,9 +23,13 @@ class Ability
     end
 
     # Rateable resource
-    can :rate,          [Answer, Question]
-    can :rate_against,  [Answer, Question]
-    can :cancel_rating, [Answer, Question]
+    alias_action :rate, :rate_against, to: :rates
+    can :rates, [Answer, Question] do |rateable|
+      rateable.author_id != @user.id && !UserRating.where(user: @user, rateable: rateable).present?
+    end
+    can :cancel_rating, [Answer, Question] do |rateable|
+      UserRating.where(user: @user, rateable: rateable).present?
+    end
 
     # Commentable resource
     can :new_comment, [Answer, Question]
