@@ -25,4 +25,12 @@ Rails.application.routes.draw do
   end
 
   resources :rewards, only: :index
+
+  namespace :api do
+    namespace :v1 do
+      resource :profiles, only: [] do
+        get :me
+      end
+    end
+  end
 end
