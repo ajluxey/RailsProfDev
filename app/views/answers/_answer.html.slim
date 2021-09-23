@@ -12,14 +12,14 @@
       - answer.files.each do |file|
         p= link_to file.filename.to_s, url_for(file), target: "_blank"
 
-    - if user_signed_in? && current_user.author?(answer.question)
+    - if can? :update_best, answer
       - unless answer.best
         = content_tag :div, class: 'highlight-answer',data: { answer_id: answer.id } do
           = button_to('Highlight as best answer', update_best_answer_path(answer), method: :patch, remote: true)
 
     = render "shared/rating", rateable_resource: answer
 
-    - if user_signed_in? && current_user.author?(answer)
+    - if can?(:update, answer) && can?(:destroy, answer)
       p
         = link_to('Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }) + ' '
         = link_to('Delete answer', answer_path(answer), method: :delete, remote: true)
