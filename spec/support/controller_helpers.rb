@@ -3,4 +3,8 @@ module ControllerHelpers
     @request.env['devise.mapping'] = Devise.mappings[:user]
     sign_in(user)
   end
+
+  def from(url)
+    request.env['HTTP_REFERER'] = url
+  end
 end

@@ -3,6 +3,6 @@
   .comments-list
     = render commentable_resource.comments
 
-  - if user_signed_in?
+  - if can? :create, Comment
     .comment-errors
     = render 'comments/form', commentable_resource: commentable_resource

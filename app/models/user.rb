@@ -11,8 +11,4 @@ class User < ApplicationRecord
   def author?(resource)
     id == resource.author_id
   end
-
-  def can_change_rating?(resource)
-    !author?(resource)
-  end
 end

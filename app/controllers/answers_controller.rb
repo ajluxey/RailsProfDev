@@ -2,12 +2,12 @@ class AnswersController < ApplicationController
   before_action :set_answer, only: %i[update update_best destroy]
 
   before_action :authenticate_user!
-  before_action :required_author!, only: %i[update destroy]
-  before_action :required_question_author!, only: :update_best
   after_action  :published, only: :create
 
   include Rated
   include Commented
+
+  authorize_resource
 
   def create
     @question = Question.find(params[:question_id])
@@ -48,14 +48,6 @@ class AnswersController < ApplicationController
                                    files_blob_ids: [],
                                    files: [],
                                    links_attributes: %i[id name url _destroy])
-  end
-
-  def required_author!
-    redirect_to question_path(@answer.question), alert: 'You must be author' unless current_user.author?(@answer)
-  end
-
-  def required_question_author!
-    redirect_to question_path(@answer.question), alert: 'You must be author of question' unless current_user.author?(@answer.question)
   end
 
   def published

@@ -1,6 +1,6 @@
 RSpec.describe AnswersController, type: :controller do
-  let(:user)     { create(:user)                                     }
-  let(:question) { create(:question)                                 }
+  let(:user)     { create(:user)     }
+  let(:question) { create(:question) }
 
   before { login(user) }
 
@@ -47,6 +47,7 @@ RSpec.describe AnswersController, type: :controller do
     let(:answer_params)        { attributes_for(:answer, :updated) }
 
     before do |test|
+      from question_path(question)
       patch_update_request unless test.metadata[:update_with_files]
     end
 
@@ -105,8 +106,8 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer).to have_attributes(attributes_for(:answer))
       end
 
-      it 'redirect to show associated question' do
-        expect(response).to redirect_to question_path(answer.question)
+      it 'redirect back' do
+        expect(response).to redirect_to question_path(question)
       end
     end
   end
@@ -154,7 +155,10 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'request from not author of question' do
-      before { patch_update_best_request }
+      before do
+        from question_path(question)
+        patch_update_best_request
+      end
 
       it 'does not update requested answer' do
         answer.reload
@@ -162,8 +166,8 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.best).to be_falsey
       end
 
-      it 'redirect to question show' do
-        expect(response).to redirect_to question_path(answer.question)
+      it 'redirect back' do
+        expect(response).to redirect_to question_path(question) # to question_path(answer.question)
       end
     end
   end
@@ -262,7 +266,8 @@ RSpec.describe AnswersController, type: :controller do
         expect { post_delete_request }.not_to change(Answer, :count)
       end
 
-      it 'redirect to question show' do
+      it 'redirect back' do
+        from question_path(question)
         post :destroy, params: { id: answer }
 
         expect(response).to redirect_to question_path(question)

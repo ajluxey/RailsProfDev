@@ -4,15 +4,15 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.7.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
-gem 'rails', '~> 6.1.4'
-gem 'pg', '~> 1.1'
-gem 'puma', '~> 5.0'
-gem 'sass-rails', '>= 6'
-gem 'webpacker', '~> 5.0'
-gem 'turbolinks', '~> 5'
+gem 'gon'
 gem 'jbuilder', '~> 2.7'
 gem 'jquery-rails'
-gem 'gon'
+gem 'pg', '~> 1.1'
+gem 'puma', '~> 5.0'
+gem 'rails', '~> 6.1.4'
+gem 'sass-rails', '>= 6'
+gem 'turbolinks', '~> 5'
+gem 'webpacker', '~> 5.0'
 
 # Active storage
 gem 'active_storage_validations'
@@ -32,8 +32,11 @@ gem 'octokit', '~> 4.0'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
-gem 'devise'
 gem 'slim-rails'
+
+# Authentication and Authorization
+gem 'cancancan'
+gem 'devise'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -58,11 +61,11 @@ group :test do
   gem 'capybara', '>= 3.26'
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
+  gem 'capybara-wsl'
+  gem 'launchy'
   gem 'rails-controller-testing'
   gem 'shoulda-matchers'
   gem 'webdrivers'
-  gem 'launchy'
-  gem 'capybara-wsl'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

@@ -1,7 +1,7 @@
 = content_tag :div, class: 'question', data: { question_id: @question.id } do
   = render 'question_in_show'
 
--if user_signed_in?
+-if can? :create, Answer
   h3 Create new answer
 
   - if @question.reward.present?

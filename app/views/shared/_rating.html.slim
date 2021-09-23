@@ -2,7 +2,8 @@
   p
     = "Rating: #{content_tag(:span, rateable_resource.rating, class: 'rating-counter')}".html_safe
 
-  - if user_signed_in? && current_user.can_change_rating?(rateable_resource)
+  / - if user_signed_in? && current_user.can_change_rating?(rateable_resource)
+  - if can?(:rates, rateable_resource) || can?(:cancel_rating, rateable_resource)
     - update_class = 'update-rating'
     - cancel_class = "cancel update-rating"
 
