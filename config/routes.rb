@@ -33,8 +33,8 @@ Rails.application.routes.draw do
         get :other_users
       end
 
-      resources :questions, only: %i[index show] do
-        resources :answers, only: %i[index show], shallow: true
+      resources :questions, except: %i[new edit] do
+        resources :answers, except: %i[new edit], shallow: true
       end
     end
   end
