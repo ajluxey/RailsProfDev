@@ -1,32 +1,32 @@
 describe 'Questions API', type: :request do
   let(:headers) {
-    { "CONTENT_TYPE" => "application/json",
-      "ACCEPT" => "application/json" }
+    { "ACCEPT" => "application/json" }
   }
+  let(:user)         { create(:user)                                                      }
+  let(:access_token) { create(:access_token, resource_owner_id: user.id)                  }
+  let(:options)      { { params: { access_token: access_token.token }, headers: headers } }
 
   describe 'GET /questions' do
-    let(:api_path)     { '/api/v1/questions'                                                }
-    let(:access_token) { create(:access_token)                                              }
-    let(:options)      { { params: { access_token: access_token.token }, headers: headers } }
+    let(:api_path) { '/api/v1/questions' }
 
     it_behaves_like 'API Authorizable' do
-      let(:method) { get }
+      let(:method) { :get }
     end
 
     context 'authorized' do
-      let(:questions_count) { 2                                      }
-      let!(:questions)      { create_list(:question, question_count) }
-      let(:question)        { questions.first                        }
-      let(:question_json)   { json_response['questions'].first       }
+      let(:questions_count) { 2                                       }
+      let!(:questions)      { create_list(:question, questions_count) }
+      let(:question)        { questions.first                         }
+      let(:question_json)   { json_response['questions'].first        }
 
       before { get api_path, options }
 
       it 'returns list of questions' do
-        expect(json_response.size).to eq question_count
+        expect(json_response['questions'].size).to eq questions_count
       end
 
       it 'returns all public fields' do
-        %w[id title body author].each do |attr|
+        %w[id title body].each do |attr|
           expect(question_json[attr]).to eq question.send(attr).as_json
         end
       end
@@ -34,13 +34,11 @@ describe 'Questions API', type: :request do
   end
 
   describe 'GET /questions/:id' do
-    let!(:question)     { create(:question)                                                  }
-    let(:api_path)      { "/api/v1/questions/#{question.id}"                                 }
-    let(:access_token)  { create(:access_token)                                              }
-    let(:options)       { { params: { access_token: access_token.token }, headers: headers } }
+    let!(:question) { create(:question)                  }
+    let(:api_path)  { "/api/v1/questions/#{question.id}" }
 
     it_behaves_like 'API Authorizable' do
-      let(:method) { get }
+      let(:method) { :get }
     end
 
     context 'authorized' do
@@ -49,9 +47,11 @@ describe 'Questions API', type: :request do
       it 'returns all public fields' do
         get api_path, options
 
-        %w[id title body author links files comments].each do |attr|
+        %w[id title body links comments].each do |attr|
           expect(question_json[attr]).to eq question.send(attr).as_json
         end
+
+        # expect(question_json['files']).to eq question.files.as_json(serializer: FileSerializer)
       end
     end
   end
@@ -59,17 +59,15 @@ describe 'Questions API', type: :request do
   describe 'POST /questions' do
     let(:question_params) { attributes_for(:question) }
     let(:api_path)        { "/api/v1/questions/"      }
-    let(:access_token)    { create(:access_token)     }
     let(:options)         {
       {
         headers: headers,
-        params:  { access_token: access_token.token,
-                   question: question_params }
+        params: { access_token: access_token.token, question: question_params }
       }
     }
 
     it_behaves_like 'API Authorizable' do
-      let(:method) { post }
+      let(:method) { :post }
     end
 
     context 'authorize' do
@@ -95,27 +93,25 @@ describe 'Questions API', type: :request do
         it 'returns errors' do
           post api_path, options
 
-          expect(json_response['errors']['title']).to eq "Title can't be blank"
+          expect(json_response['errors']['title']).to contain_exactly "can't be blank"
         end
       end
     end
   end
 
   describe 'PATCH /questions/:id' do
-    let!(:question)       { create(:question)                             }
-    let(:question_params) { attributes_for(:question, :new)               }
+    let!(:question)       { create(:question, author: user)               }
+    let(:question_params) { attributes_for(:question, :updated)           }
     let(:api_path)        { "/api/v1/questions/#{question.id}"            }
-    let(:access_token)    { create(:access_token)                         }
     let(:options)         {
       {
         headers: headers,
-        params:  { access_token: access_token.token,
-                   question: question_params }
+        params: { access_token: access_token.token, question: question_params }
       }
     }
 
     it_behaves_like 'API Authorizable' do
-      let(:method) { patch }
+      let(:method) { :patch }
     end
 
     context 'authorize' do
@@ -133,13 +129,13 @@ describe 'Questions API', type: :request do
         let(:question_params) { attributes_for(:question, :invalid) }
 
         it 'returns bad request' do
-          post api_path, options
+          patch api_path, options
 
           expect(response).not_to be_successful
         end
 
         it 'does not update question' do
-          post api_path, options
+          patch api_path, options
 
           question.reload
 
@@ -147,27 +143,22 @@ describe 'Questions API', type: :request do
         end
 
         it 'returns errors' do
-          post api_path, options
+          patch api_path, options
 
-          expect(json_response['errors']['title']).to eq "Title can't be blank"
+          expect(json_response['errors']['title']).to contain_exactly "can't be blank"
         end
       end
     end
   end
 
   describe 'DELETE /questions/:id' do
-    let!(:question)       { create(:question)                   }
-    let(:api_path)        { "/api/v1/questions/#{question.id}"  }
-    let(:access_token)    { create(:access_token)               }
-    let(:options)         {
-      {
-        headers: headers,
-        params:  { access_token: access_token.token }
-      }
-    }
+    let!(:question) { create(:question, author: user)    }
+    let(:api_path)  { "/api/v1/questions/#{question.id}" }
 
     it_behaves_like 'API Authorizable' do
-      let(:method) { delete }
+      let(:method) { :delete }
     end
+
+    it { expect { delete api_path, options }.to change(Question, :count).by(-1) }
   end
 end

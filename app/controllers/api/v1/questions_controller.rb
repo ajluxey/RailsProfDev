@@ -1,5 +1,5 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
-  before_action :set_question, only: %i[show update delete]
+  before_action :set_question, only: %i[show update destroy]
 
   authorize_resource
 
@@ -12,12 +12,12 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def create
-    @question = Question.new(question_params)
+    @question = current_user.questions.build(question_params)
 
     if @question.save
       render json: @question
     else
-      render json: @question.errors, status: :unprocessable_entity
+      render json: { errors: @question.errors }, status: :unprocessable_entity
     end
   end
 
@@ -25,18 +25,14 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     if @question.update(question_params)
       render json: @question
     else
-      render json: @question.errors, status: :unprocessable_entity
+      render json: { errors: @question.errors }, status: :unprocessable_entity
     end
   end
 
   def destroy
     @question.destroy
 
-    if @question.destroyed?
-      render status: :bad_request
-    else
-      render stats: :ok
-    end
+    head :ok
   end
 
   private
