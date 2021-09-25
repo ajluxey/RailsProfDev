@@ -55,7 +55,7 @@ class QuestionsController < ApplicationController
                                      reward_attributes: %i[id name image])
   end
 
- def published
+  def published
     return if @question.errors.any?
 
     ActionCable.server.broadcast(
