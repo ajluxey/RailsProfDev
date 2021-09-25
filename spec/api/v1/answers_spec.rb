@@ -54,39 +54,19 @@ describe 'Answers API', type: :request do
   end
 
   describe 'POST /questions/:id/answers' do
-    let(:answer_params) { attributes_for(:answer)                                                  }
-    let(:api_path)      { "/api/v1/questions/#{question.id}/answers"                               }
-    let(:options)       { { params:  { access_token: access_token.token, answer: answer_params } } }
+    let(:answer_params) { attributes_for(:answer)                                                 }
+    let(:api_path)      { "/api/v1/questions/#{question.id}/answers"                              }
+    let(:options)       { { params: { access_token: access_token.token, answer: answer_params } } }
 
     it_behaves_like 'API Authorizable' do
       let(:method) { :post }
     end
 
     context 'authorize' do
-      context 'answer with valid params' do
-        it 'saves question' do
-          expect { post api_path, options }.to change(Answer, :count).by(1)
-        end
-      end
-
-      context 'answer with invalid params' do
-        let(:answer_params) { attributes_for(:answer, :invalid) }
-
-        it 'returns bad request' do
-          post api_path, options
-
-          expect(response).not_to be_successful
-        end
-
-        it 'does not save the answer' do
-          expect { post api_path, options }.not_to change(Answer, :count)
-        end
-
-        it 'returns errors' do
-          post api_path, options
-
-          expect(json_response['errors']['body']).to contain_exactly "can't be blank"
-        end
+      it_behaves_like 'Resource creatable by API' do
+        let(:model)         { question.answers }
+        let(:attr)          { 'body'           }
+        let(:error_message) { "can't be blank" }
       end
     end
   end
@@ -102,38 +82,10 @@ describe 'Answers API', type: :request do
     end
 
     context 'authorize' do
-      context 'answer with valid params' do
-        it 'updates answer' do
-          patch api_path, options
-
-          answer.reload
-
-          expect(answer).to have_attributes(answer_params)
-        end
-      end
-
-      context 'answer with invalid params' do
-        let(:answer_params) { attributes_for(:answer, :invalid) }
-
-        it 'returns bad request' do
-          patch api_path, options
-
-          expect(response).not_to be_successful
-        end
-
-        it 'does not update answer' do
-          patch api_path, options
-
-          answer.reload
-
-          expect(answer).to have_attributes(attributes_for(:answer))
-        end
-
-        it 'returns errors' do
-          patch api_path, options
-
-          expect(json_response['errors']['body']).to contain_exactly "can't be blank"
-        end
+      it_behaves_like 'Resource updatable by API' do
+        let(:existed_resource) { answer           }
+        let(:attr)             { 'body'           }
+        let(:error_message)    { "can't be blank" }
       end
     end
   end
