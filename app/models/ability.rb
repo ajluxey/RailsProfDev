@@ -18,6 +18,16 @@ class Ability
     can :update,  [Question, Answer], author_id: @user.id
     can :destroy, [Question, Answer], author_id: @user.id
 
+    # Question subscribes
+    can :subscribe_on, Question do |question|
+      !@user.subscribed_on?(question)
+    end
+
+    can :unsubscribe_from, Question do |question|
+      @user.subscribed_on?(question)
+    end
+
+    # Answer
     can :update_best, Answer do |answer|
       @user.author? answer.question
     end

@@ -22,6 +22,8 @@ Rails.application.routes.draw do
         post :new_comment
       end
     end
+
+    resources :subscriptions, only: %i[create destroy], shallow: true
   end
 
   resources :rewards, only: :index
