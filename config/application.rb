@@ -16,6 +16,8 @@ module Qna
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
 
+    config.active_job.queue_adapter = :sidekiq
+
     config.generators do |g|
       g.test_framework :rspec,
                        controller_specs: true,

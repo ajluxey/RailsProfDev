@@ -70,6 +70,12 @@ RSpec.describe QuestionsController, type: :controller do
 
           expect(response).to redirect_to assigns(:question)
         end
+
+        it 'subscribed current user on this question' do
+          post_create_request
+
+          expect(assigns(:question).subscribers).to contain_exactly(user)
+        end
       end
 
       context 'with invalid params' do

@@ -10,10 +10,11 @@ class Answer < ApplicationRecord
 
   has_many_attached :files
 
-
   validates :body, presence: true
   validates :best, inclusion: { in: [true, false] }
   validate  :validation_one_best_answer
+
+  after_create :notify
 
   def is_best!
     previous_best_answer = question.best_answer
@@ -39,5 +40,9 @@ class Answer < ApplicationRecord
     if best? && question.answers.where(best: true).count > 0 && question.answers.where(best: true).first != self
       errors.add(:question, 'already have best answer')
     end
+  end
+
+  def notify
+    NotifiedSubscribersJob.perform_later(self)
   end
 end
