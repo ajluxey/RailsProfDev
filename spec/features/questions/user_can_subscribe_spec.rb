@@ -31,6 +31,8 @@ feature 'User can subscribe on question', %q(
       given!(:subscription) { create(:subscription, user: user, question: question) }
 
       scenario 'tries to unsubscribes' do
+        visit question_path(question)
+
         click_on 'Unsubscribe'
 
         expect(page).to have_content 'You are unsubscribed'

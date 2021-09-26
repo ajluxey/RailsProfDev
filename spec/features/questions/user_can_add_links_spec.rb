@@ -101,7 +101,7 @@ feature 'User can add links to question', %q(
 
         click_on 'Update Question'
 
-        expect(page).to have_link new_link.name, href: new_link.url
+        expect(page).to have_link new_link.name, href: new_link.url # Почему-то вставляется как http::github.com
         expect(page).to have_link link.name, href: link.url
       end
     end

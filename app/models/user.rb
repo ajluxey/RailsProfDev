@@ -14,13 +14,13 @@ class User < ApplicationRecord
   end
 
   def subscribed_on?(question)
-    subscription_on(question).present?
+    subscriptions.where(question: question).present?
   end
 
-  def subscription_on(question)
-    @subscription_on ||= {}
-    return @subscription_on[question.id] if @subscription_on.has_key?(question.id)
-
-    @subscription_on[question.id] = subscriptions.where(question: question).first
-  end
+  # def subscription_on(question)
+  #   @subscription_on ||= {}
+  #   return @subscription_on[question.id] if @subscription_on.has_key?(question.id)
+  #
+  #   @subscription_on[question.id] = subscriptions.where(question: question).first
+  # end
 end
