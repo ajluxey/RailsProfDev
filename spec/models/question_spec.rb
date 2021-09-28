@@ -2,10 +2,12 @@ RSpec.describe Question, type: :model do
   it_behaves_like "rateable"
   it_behaves_like "commentable"
 
-  it { should belong_to :author                          }
-  it { should have_many(:answers).dependent(:destroy)    }
-  it { should have_many(:links).dependent(:destroy)      }
-  it { should have_one(:reward).dependent(:destroy)      }
+  it { should belong_to :author                             }
+  it { should have_many(:answers).dependent(:destroy)       }
+  it { should have_many(:links).dependent(:destroy)         }
+  it { should have_one(:reward).dependent(:destroy)         }
+  it { should have_many(:subscriptions).dependent(:destroy) }
+  it { should have_many(:subscribers)                       }
 
   it { should validate_presence_of :title }
   it { should validate_presence_of :body  }
